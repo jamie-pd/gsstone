@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>금석조경 — 자연을 담은 공간</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#1c1a17;
+  --forest:#1e3d1a;
+  --moss:#3a6b34;
+  --fern:#5a8f4a;
+  --sage:#8cb87a;
+  --mist:#c8ddc0;
+  --earth:#6b4c2a;
+  --clay:#9c6b3c;
+  --sand:#d4b896;
+  --parch:#f7f2ea;
+  --paper:#fdfaf4;
+  --stone:#8a8278;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Pretendard',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+.cursor{position:fixed;width:10px;height:10px;background:var(--fern);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.15s,background 0.3s;}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--fern);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.18s ease;opacity:0.6;}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--forest);z-index:9000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity 0.8s,visibility 0.8s;}
+#loader.gone{opacity:0;visibility:hidden;}
+.loader-text{font-family:'Pretendard',sans-serif;font-size:2rem;font-weight:700;color:var(--mist);letter-spacing:0.15em;animation:pulse 1.6s ease-in-out infinite;}
+.loader-bar{width:200px;height:1px;background:rgba(255,255,255,0.15);position:relative;overflow:hidden;}
+.loader-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--sage);animation:loadbar 1.6s ease forwards;}
+@keyframes loadbar{to{left:0;}}
+@keyframes pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:28px 64px;display:flex;align-items:center;justify-content:space-between;transition:all 0.5s;}
+nav.solid{background:rgba(253,250,244,0.96);backdrop-filter:blur(20px);padding:18px 64px;border-bottom:1px solid rgba(90,143,74,0.12);}
+.nav-logo{font-family:'Pretendard',sans-serif;font-size:1.5rem;font-weight:800;color:var(--paper);letter-spacing:0.04em;transition:color 0.5s;text-decoration:none;}
+nav.solid .nav-logo{color:var(--forest);}
+.nav-logo sup{font-size:0.55em;color:var(--sage);margin-left:2px;}
+.nav-menu{display:flex;align-items:center;gap:40px;}
+.nav-menu a{text-decoration:none;font-size:0.82rem;letter-spacing:0.06em;color:rgba(253,250,244,0.8);transition:color 0.3s;font-weight:400;}
+nav.solid .nav-menu a{color:var(--stone);}
+.nav-menu a:hover{color:var(--sage);}
+nav.solid .nav-menu a:hover{color:var(--moss);}
+.nav-cta{background:rgba(255,255,255,0.15)!important;border:1px solid rgba(255,255,255,0.3)!important;color:white!important;padding:10px 24px!important;border-radius:2px!important;transition:all 0.3s!important;}
+nav.solid .nav-cta{background:var(--forest)!important;border-color:var(--forest)!important;color:var(--paper)!important;}
+.nav-cta:hover{background:var(--fern)!important;border-color:var(--fern)!important;}
+
+/* HERO */
+#hero{height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;}
+.hero-img{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1800&q=85');background-size:cover;background-position:center 40%;transform:scale(1.04);animation:zoomOut 10s ease forwards;}
+@keyframes zoomOut{to{transform:scale(1);}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(160deg,rgba(6,18,8,0.1) 0%,rgba(10,26,10,0.42) 50%,rgba(5,14,5,0.82) 100%);}
+.hero-grain{position:absolute;inset:0;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;}
+.hero-content{position:relative;z-index:2;padding:80px 64px 0;width:100%;max-width:760px;animation:heroIn 1.2s 0.5s both ease;}
+@keyframes heroIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.hero-eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:36px;}
+.eyebrow-line{width:40px;height:1px;background:var(--sage);}
+.eyebrow-text{font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--sage);}
+.hero-title{font-family:'Pretendard',sans-serif;font-size:clamp(2.6rem,5.5vw,5rem);font-weight:600;color:var(--paper);line-height:1.18;margin-bottom:36px;letter-spacing:-0.02em;}
+.hero-title .thin{font-weight:200;display:block;font-size:0.58em;color:rgba(200,221,192,0.7);margin-bottom:14px;letter-spacing:0.04em;}
+.hero-sub{font-size:1.05rem;line-height:2;color:rgba(200,221,192,0.75);max-width:460px;margin-bottom:60px;font-weight:300;letter-spacing:0.01em;}
+.hero-actions{display:flex;align-items:center;gap:32px;}
+.btn-hero{display:inline-flex;align-items:center;gap:12px;background:var(--fern);color:white;text-decoration:none;padding:16px 40px;font-size:0.88rem;letter-spacing:0.08em;transition:all 0.3s;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-weight:400;}
+.btn-hero:hover{background:var(--moss);gap:18px;}
+.hero-scroll{display:flex;align-items:center;gap:10px;color:rgba(200,221,192,0.55);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;}
+.scroll-line{width:1px;height:44px;background:rgba(200,221,192,0.3);animation:scrollPulse 2s ease-in-out infinite;}
+@keyframes scrollPulse{0%,100%{transform:scaleY(0.4);}50%{transform:scaleY(1);}}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--forest);padding:18px 0;overflow:hidden;}
+.marquee-track{display:flex;animation:marquee 24s linear infinite;white-space:nowrap;}
+.marquee-item{font-family:'Pretendard',sans-serif;font-size:0.82rem;letter-spacing:0.15em;color:var(--mist);padding:0 48px;display:inline-flex;align-items:center;gap:20px;opacity:0.6;font-weight:300;}
+.m-dot{width:4px;height:4px;background:var(--sage);border-radius:50%;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* COMMON */
+section{padding:130px 64px;}
+.eyebrow{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--fern);margin-bottom:18px;display:flex;align-items:center;gap:12px;font-family:'Pretendard',sans-serif;font-weight:400;}
+.eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--fern);}
+h2{font-family:'Pretendard',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:600;color:var(--forest);line-height:1.25;margin-bottom:28px;letter-spacing:-0.02em;}
+.body-text{font-size:1rem;line-height:2.0;color:#5a5040;font-weight:300;letter-spacing:0.01em;}
+
+/* ABOUT */
+#about{background:var(--paper);display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;overflow:hidden;}
+.about-img-col{position:relative;min-height:700px;overflow:hidden;}
+.about-img-col img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.8s ease;}
+.about-img-col:hover img{transform:scale(1.04);}
+.about-badge{position:absolute;bottom:40px;left:40px;background:var(--forest);color:var(--paper);padding:24px 30px;font-family:'Pretendard',sans-serif;}
+.badge-n{font-size:3rem;font-weight:600;line-height:1;color:var(--sage);}
+.badge-l{font-size:0.78rem;letter-spacing:0.08em;margin-top:6px;opacity:0.75;}
+.about-text-col{padding:110px 80px;display:flex;flex-direction:column;justify-content:center;background:var(--parch);}
+.about-text-col .body-text{max-width:440px;margin-bottom:56px;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;}
+.stat{border-top:1.5px solid var(--mist);padding-top:22px;}
+.stat-n{font-family:'Pretendard',sans-serif;font-size:2.4rem;font-weight:600;color:var(--moss);line-height:1;letter-spacing:-0.02em;}
+.stat-l{font-size:0.78rem;color:var(--stone);margin-top:8px;font-weight:300;}
+
+/* SERVICES */
+#services{background:var(--forest);}
+#services h2{color:var(--mist);}
+#services .eyebrow{color:var(--sage);}
+#services .eyebrow::before{background:var(--sage);}
+.svc-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:80px;}
+.svc-intro .body-text{color:rgba(200,221,192,0.7);}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.05);}
+.svc-card{background:rgba(30,61,26,0.85);padding:52px 40px;position:relative;overflow:hidden;transition:background 0.4s;}
+.svc-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--fern),var(--sage));transform:scaleX(0);transform-origin:left;transition:transform 0.5s;}
+.svc-card:hover{background:rgba(58,107,52,0.45);}
+.svc-card:hover::before{transform:scaleX(1);}
+.svc-num{font-size:0.7rem;letter-spacing:0.2em;color:rgba(140,184,122,0.35);margin-bottom:32px;font-family:'Pretendard',sans-serif;}
+.svc-icon{font-size:2.4rem;margin-bottom:22px;display:block;}
+.svc-card h3{font-family:'Pretendard',sans-serif;font-size:1.15rem;color:var(--mist);margin-bottom:16px;font-weight:500;letter-spacing:-0.01em;}
+.svc-card p{font-size:0.88rem;line-height:1.9;color:rgba(200,221,192,0.55);font-weight:300;}
+
+/* PORTFOLIO */
+#portfolio{padding:130px 0 0;background:var(--parch);}
+.port-header{padding:0 64px 64px;}
+.port-scroll{display:grid;grid-template-columns:repeat(5,minmax(300px,1fr));overflow-x:auto;scrollbar-width:none;gap:3px;}
+.port-scroll::-webkit-scrollbar{display:none;}
+.port-item{position:relative;overflow:hidden;aspect-ratio:3/4;cursor:pointer;background:#d8d4cc;}
+.port-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;}
+.port-item:hover img{transform:scale(1.08);}
+.port-item-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:0.25;}
+.port-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,35,12,0.9) 0%,transparent 55%);opacity:0;transition:opacity 0.4s;}
+.port-item:hover .port-overlay{opacity:1;}
+.port-info{position:absolute;bottom:0;left:0;right:0;padding:28px 24px;opacity:0;transform:translateY(10px);transition:all 0.4s;}
+.port-item:hover .port-info{opacity:1;transform:translateY(0);}
+.port-tag{font-size:0.68rem;letter-spacing:0.15em;color:var(--sage);text-transform:uppercase;margin-bottom:6px;font-family:'Pretendard',sans-serif;}
+.port-info h4{font-family:'Pretendard',sans-serif;font-size:1rem;color:white;font-weight:500;}
+.port-footer{padding:36px 64px;border-top:1px solid var(--mist);display:flex;justify-content:space-between;align-items:center;}
+.port-note{font-size:0.82rem;color:var(--stone);}
+.port-hint{font-size:0.72rem;letter-spacing:0.12em;color:var(--fern);text-transform:uppercase;}
+.port-empty{padding:80px 64px;text-align:center;color:var(--stone);}
+.port-empty p{font-size:0.9rem;line-height:1.9;}
+
+/* PHILOSOPHY */
+#philosophy{padding:0;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
+.philo-img{position:relative;min-height:620px;overflow:hidden;}
+.philo-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.philo-img::after{content:'';position:absolute;inset:0;background:rgba(30,61,26,0.22);}
+.philo-text{padding:110px 80px;background:var(--parch);display:flex;flex-direction:column;justify-content:center;}
+.philo-text blockquote{font-family:'Pretendard',sans-serif;font-size:1.5rem;font-weight:400;color:var(--forest);line-height:1.7;margin:32px 0 36px;border-left:2px solid var(--fern);padding-left:28px;letter-spacing:-0.01em;}
+.philo-text .body-text{max-width:420px;}
+.values{margin-top:44px;display:flex;flex-direction:column;gap:16px;}
+.val{display:flex;align-items:center;gap:14px;font-size:0.92rem;color:var(--moss);font-weight:400;letter-spacing:0.01em;}
+.val-dot{width:6px;height:6px;background:var(--fern);border-radius:50%;flex-shrink:0;}
+
+/* CONTACT */
+#contact{background:var(--forest);padding:130px 64px;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start;}
+#contact h2{color:var(--mist);}
+#contact .eyebrow{color:var(--sage);}
+#contact .eyebrow::before{background:var(--sage);}
+#contact .body-text{color:rgba(200,221,192,0.68);max-width:380px;margin-bottom:56px;}
+.c-items{display:flex;flex-direction:column;gap:26px;}
+.c-item{display:flex;align-items:flex-start;gap:18px;}
+.c-icon{width:46px;height:46px;border:1px solid rgba(140,184,122,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.c-label{font-size:0.7rem;letter-spacing:0.1em;color:var(--sage);text-transform:uppercase;margin-bottom:5px;font-family:'Pretendard',sans-serif;font-weight:500;}
+.c-val{font-size:0.92rem;color:var(--mist);font-weight:300;}
+.cform{background:rgba(255,255,255,0.04);border:1px solid rgba(140,184,122,0.1);padding:52px 44px;}
+.fl{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(140,184,122,0.55);display:block;margin-bottom:10px;font-family:'Pretendard',sans-serif;font-weight:500;}
+.fi,.fs,.ft{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(140,184,122,0.18);padding:12px 0;color:var(--mist);font-family:'Pretendard',sans-serif;font-size:0.9rem;font-weight:300;outline:none;transition:border-color 0.3s;margin-bottom:30px;}
+.fi:focus,.fs:focus,.ft:focus{border-bottom-color:var(--sage);}
+.fs option{background:var(--forest);}
+.ft{resize:none;min-height:100px;}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.btn-send{background:var(--fern);color:white;border:none;width:100%;padding:16px;font-family:'Pretendard',sans-serif;font-size:0.88rem;letter-spacing:0.08em;cursor:pointer;transition:background 0.3s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:400;}
+.btn-send:hover{background:var(--moss);}
+.fnote{font-size:0.74rem;color:rgba(140,184,122,0.35);text-align:center;margin-top:14px;}
+
+/* FOOTER */
+footer{background:#0e1a0c;padding:70px 64px 40px;}
+.ft-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:56px;}
+.f-logo{font-family:'Pretendard',sans-serif;font-size:1.6rem;font-weight:600;color:var(--paper);letter-spacing:-0.01em;}
+.f-logo span{color:var(--sage);}
+.f-tag{font-size:0.8rem;color:rgba(200,221,192,0.35);margin-top:10px;font-weight:300;}
+.ft-nav{display:flex;gap:60px;}
+.fc h5{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--sage);margin-bottom:20px;font-family:'Pretendard',sans-serif;font-weight:400;}
+.fc ul{list-style:none;}
+.fc li{margin-bottom:13px;}
+.fc a{text-decoration:none;font-size:0.84rem;color:rgba(200,221,192,0.4);transition:color 0.3s;font-weight:300;}
+.fc a:hover{color:var(--mist);}
+.ft-bot{border-top:1px solid rgba(255,255,255,0.05);padding-top:24px;display:flex;justify-content:space-between;}
+.ft-bot span{font-size:0.76rem;color:rgba(200,221,192,0.25);}
+
+/* SCROLL REVEAL */
+.sr{opacity:0;transform:translateY(34px);transition:opacity 0.85s ease,transform 0.85s ease;}
+.sr.in{opacity:1;transform:none;}
+.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}.d3{transition-delay:0.3s;}
+
+/* MOBILE */
+@media(max-width:900px){
+  nav{padding:18px 24px;}
+  nav.solid{padding:14px 24px;}
+  .nav-menu{display:none;}
+  #hero .hero-content{padding:0 24px 70px;}
+  section{padding:80px 24px;}
+  #about,#philosophy{grid-template-columns:1fr;}
+  .about-img-col{min-height:340px;}
+  .about-text-col,.philo-text{padding:60px 32px;}
+  .svc-intro{grid-template-columns:1fr;gap:20px;}
+  .svc-grid{grid-template-columns:1fr;}
+  .port-scroll{grid-template-columns:repeat(3,minmax(240px,1fr));}
+  .port-header,.port-footer{padding:0 24px 36px;}
+  #contact{grid-template-columns:1fr;gap:52px;padding:80px 24px;}
+  .cform{padding:36px 24px;}
+  .fr2{grid-template-columns:1fr;}
+  .ft-top{flex-direction:column;gap:32px;}
+  .ft-nav{flex-wrap:wrap;gap:28px;}
+  footer{padding:50px 24px 28px;}
+  .stats{grid-template-columns:repeat(3,1fr);gap:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div id="loader">
+  <div class="loader-text">금석조경</div>
+  <div class="loader-bar"></div>
+</div>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">금석조경<sup>®</sup></a>
+  <div class="nav-menu">
+    <a href="#about">소개</a>
+    <a href="#services">서비스</a>
+    <a href="#portfolio">프로젝트</a>
+    <a href="#philosophy">철학</a>
+    <a href="#contact" class="nav-cta">문의하기</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text" id="d-hero-eyebrow">자연을 담은 공간 — Since 2009</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="thin" id="d-hero-thin">땅과 하늘 사이,</span>
+      <span id="d-hero-title">살아있는<br/>정원을<br/>짓습니다</span>
+    </h1>
+    <p class="hero-sub" id="d-hero-sub">금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-hero">프로젝트 문의 →</a>
+      <div class="hero-scroll">
+        <div class="scroll-line"></div>
+        <span>스크롤</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="mtrack">
+    <span class="marquee-item">정원 설계<span class="m-dot"></span></span>
+    <span class="marquee-item">수경 시설<span class="m-dot"></span></span>
+    <span class="marquee-item">조경 시공<span class="m-dot"></span></span>
+    <span class="marquee-item">유지 관리<span class="m-dot"></span></span>
+    <span class="marquee-item">공공 조경<span class="m-dot"></span></span>
+    <span class="marquee-item">상업 조경<span class="m-dot"></span></span>
+    <span class="marquee-item">주거 정원<span class="m-dot"></span></span>
+    <span class="marquee-item">한국 전통 정원<span class="m-dot"></span></span>
+    <span class="marquee-item">정원 설계<span class="m-dot"></span></span>
+    <span class="marquee-item">수경 시설<span class="m-dot"></span></span>
+    <span class="marquee-item">조경 시공<span class="m-dot"></span></span>
+    <span class="marquee-item">유지 관리<span class="m-dot"></span></span>
+    <span class="marquee-item">공공 조경<span class="m-dot"></span></span>
+    <span class="marquee-item">상업 조경<span class="m-dot"></span></span>
+    <span class="marquee-item">주거 정원<span class="m-dot"></span></span>
+    <span class="marquee-item">한국 전통 정원<span class="m-dot"></span></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" style="padding:0;">
+  <div class="about-img-col sr">
+    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80" alt="자연 정원" loading="lazy"/>
+    <div class="about-badge">
+      <div class="badge-n">15+</div>
+      <div class="badge-l">Years of Craft</div>
+    </div>
+  </div>
+  <div class="about-text-col sr d1">
+    <div class="eyebrow" id="d-about-eyebrow">금석조경 소개</div>
+    <h2 id="d-about-title">자연과 사람이<br/>공존하는 공간</h2>
+    <p class="body-text" id="d-about-body">금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다. 단순한 시공이 아닌, 공간에 이야기를 담고 계절마다 달리 빛나는 살아있는 환경을 만들어 드립니다.</p>
+    <div class="stats">
+      <div class="stat sr d1"><div class="stat-n" id="d-stat1n">500+</div><div class="stat-l" id="d-stat1l">완료 프로젝트</div></div>
+      <div class="stat sr d2"><div class="stat-n" id="d-stat2n">15년</div><div class="stat-l" id="d-stat2l">전문 경력</div></div>
+      <div class="stat sr d3"><div class="stat-n" id="d-stat3n">98%</div><div class="stat-l" id="d-stat3l">고객 만족도</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="svc-intro sr">
+    <div>
+      <div class="eyebrow">서비스 안내</div>
+      <h2>전문 조경<br/>서비스</h2>
+    </div>
+    <p class="body-text">설계부터 시공, 유지 관리까지 — 자연을 담는 모든 과정을 함께합니다.</p>
+  </div>
+  <div class="svc-grid" id="d-svc-grid">
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" style="padding:120px 0 0;">
+  <div class="port-header sr">
+    <div class="eyebrow">프로젝트 사례</div>
+    <h2>우리가 만든<br/>공간들</h2>
+  </div>
+  <div class="port-scroll" id="port-scroll">
+    <!-- admin에서 등록한 프로젝트가 여기 표시됩니다 -->
+  </div>
+  <div class="port-footer sr">
+    <span class="port-note" id="port-count"></span>
+    <span class="port-hint">← 가로 스크롤 →</span>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy" style="padding:0;">
+  <div class="philo-img sr">
+    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80" alt="숲 철학" loading="lazy"/>
+  </div>
+  <div class="philo-text sr d1">
+    <div class="eyebrow">우리의 철학</div>
+    <h2 id="d-philo-title">자연은<br/>설계되지 않는다</h2>
+    <blockquote id="d-philo-quote">"가장 좋은 정원은<br/>정원처럼 보이지 않는 정원"</blockquote>
+    <p class="body-text" id="d-philo-body">금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다. 모든 식물에는 이야기가 있고, 모든 돌에는 시간이 깃들어 있습니다.</p>
+    <div class="values" id="d-values">
+      <div class="val"><div class="val-dot"></div><span id="d-val1">자연과의 조화를 최우선으로</span></div>
+      <div class="val"><div class="val-dot"></div><span id="d-val2">지속 가능한 소재와 공법 사용</span></div>
+      <div class="val"><div class="val-dot"></div><span id="d-val3">사계절 살아있는 공간 구성</span></div>
+      <div class="val"><div class="val-dot"></div><span id="d-val4">고객과의 깊은 소통과 신뢰</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sr">
+    <div class="eyebrow">프로젝트 문의</div>
+    <h2>함께 만들어갈<br/>공간이 있나요?</h2>
+    <p class="body-text">새로운 프로젝트나 궁금한 점이 있으시면 언제든지 연락 주세요. 24시간 이내 답변 드리겠습니다.</p>
+    <div class="c-items">
+      <div class="c-item"><div class="c-icon">📧</div><div><div class="c-label">이메일</div><div class="c-val" id="d-email">추후 업데이트 예정</div></div></div>
+      <div class="c-item"><div class="c-icon">📞</div><div><div class="c-label">전화</div><div class="c-val" id="d-phone">추후 업데이트 예정</div></div></div>
+      <div class="c-item"><div class="c-icon">📍</div><div><div class="c-label">위치</div><div class="c-val" id="d-address">추후 업데이트 예정</div></div></div>
+      <div class="c-item"><div class="c-icon">⏰</div><div><div class="c-label">운영 시간</div><div class="c-val" id="d-hours">평일 09:00 – 18:00</div></div></div>
+    </div>
+  </div>
+  <div class="cform sr d1">
+    <div class="fr2">
+      <div><label class="fl">이름 *</label><input type="text" class="fi" id="fn" placeholder="홍길동"/></div>
+      <div><label class="fl">연락처 *</label><input type="tel" class="fi" id="fp" placeholder="010-0000-0000"/></div>
+    </div>
+    <label class="fl">이메일 *</label>
+    <input type="email" class="fi" id="fe" placeholder="example@email.com"/>
+    <label class="fl">프로젝트 유형</label>
+    <select class="fs" id="ftype">
+      <option value="">선택해 주세요</option>
+      <option>주거 정원 설계 & 시공</option>
+      <option>상업 & 공공 조경</option>
+      <option>수경 시설 조성</option>
+      <option>유지 관리 서비스</option>
+      <option>기타 문의</option>
+    </select>
+    <label class="fl">문의 내용 *</label>
+    <textarea class="ft" id="fm" placeholder="프로젝트 내용, 규모, 희망 일정 등을 자유롭게 작성해 주세요."></textarea>
+    <button class="btn-send" onclick="sendForm()">문의 보내기 →</button>
+    <p class="fnote">* 이메일 주소 설정 후 실제 발송이 가능합니다</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="f-logo">금석<span>조경</span></div>
+      <div class="f-tag">자연을 담은 공간 — 2009년 창업</div>
+    </div>
+    <div class="ft-nav">
+      <div class="fc">
+        <h5>서비스</h5>
+        <ul>
+          <li><a href="#services">정원 설계</a></li>
+          <li><a href="#services">주거 조경</a></li>
+          <li><a href="#services">상업 조경</a></li>
+          <li><a href="#services">수경 시설</a></li>
+          <li><a href="#services">유지 관리</a></li>
+        </ul>
+      </div>
+      <div class="fc">
+        <h5>회사</h5>
+        <ul>
+          <li><a href="#about">소개</a></li>
+          <li><a href="#portfolio">프로젝트</a></li>
+          <li><a href="#philosophy">철학</a></li>
+          <li><a href="#contact">문의하기</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2025 금석조경. All rights reserved.</span>
+    <span>자연과 사람이 공존하는 공간</span>
+  </div>
+</footer>
+
+<script>
+// Loader
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('gone'),1800);});
+
+// Custom cursor
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function animRing(){ring.style.left=rx+(mx-rx)*0.13+'px';ring.style.top=ry+(my-ry)*0.13+'px';rx+=(mx-rx)*0.13;ry+=(my-ry)*0.13;requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.port-item,.svc-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.transform='translate(-50%,-50%) scale(2.5)';ring.style.opacity='1';ring.style.transform='translate(-50%,-50%) scale(1.6)';});
+  el.addEventListener('mouseleave',()=>{cur.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='0.6';ring.style.transform='translate(-50%,-50%) scale(1)';});
+});
+
+// Navbar
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>60));
+
+// Scroll reveal
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:0.1});
+document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+
+// ── SITE SETTINGS INJECTION ───────────────────────
+(function applySiteSettings(){
+  const STORE='gs_site';
+  const DEFAULTS={
+    hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.'},
+    about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도'},
+    services:[
+      {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
+      {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
+      {icon:'🏢',name:'상업 & 공공 조경',desc:'기업 사옥, 쇼핑몰, 공원 등 대규모 프로젝트를 전문적으로 진행합니다.'},
+      {icon:'🪨',name:'조경 구조물',desc:'석축, 데크, 퍼걸러, 연못 등 다양한 조경 구조물을 설계 및 시공합니다.'},
+      {icon:'💧',name:'수경 시설 조성',desc:'폭포, 연못, 분수로 시각적·청각적 편안함을 동시에 드립니다.'},
+      {icon:'✂️',name:'유지 관리',desc:'완공 후에도 아름다움이 지속되도록 정기적인 관리 서비스를 제공합니다.'},
+    ],
+    philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰'},
+    contact:{email:'',phone:'',address:'',hours:'평일 09:00 – 18:00',mailto:''}
+  };
+  function deepMerge(target,source){
+    const out=Object.assign({},target);
+    for(const k in source){
+      if(source[k]&&typeof source[k]==='object'&&!Array.isArray(source[k])){
+        out[k]=deepMerge(target[k]||{},source[k]);
+      } else { out[k]=source[k]; }
+    }
+    return out;
+  }
+  let d=DEFAULTS;
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORE));
+    if(saved) d=deepMerge(DEFAULTS,saved);
+  }catch{}
+
+  function set(id,val,isHtml){if(!val)return;const el=document.getElementById(id);if(el){if(isHtml)el.innerHTML=val;else el.textContent=val;}}
+  function nl2br(s){return(s||'').replace(/\n/g,'<br/>');}
+
+  // Hero
+  set('d-hero-eyebrow',d.hero.eyebrow);
+  set('d-hero-thin',d.hero.thin);
+  set('d-hero-title',nl2br(d.hero.title),true);
+  set('d-hero-sub',d.hero.sub);
+  // About
+  set('d-about-eyebrow',d.about.eyebrow);
+  set('d-about-title',nl2br(d.about.title),true);
+  set('d-about-body',d.about.body);
+  set('d-stat1n',d.about.stat1n);set('d-stat1l',d.about.stat1l);
+  set('d-stat2n',d.about.stat2n);set('d-stat2l',d.about.stat2l);
+  set('d-stat3n',d.about.stat3n);set('d-stat3l',d.about.stat3l);
+  // Services
+  const grid=document.getElementById('d-svc-grid');
+  if(grid&&d.services){
+    const delays=['','d1','d2','','d1','d2'];
+    grid.innerHTML=d.services.map((s,i)=>`
+      <div class="svc-card sr ${delays[i]}">
+        <div class="svc-num">0${i+1}</div>
+        <span class="svc-icon">${s.icon}</span>
+        <h3>${s.name}</h3>
+        <p>${s.desc}</p>
+      </div>`).join('');
+    grid.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+  }
+  // Philosophy
+  set('d-philo-title',nl2br(d.philosophy.title),true);
+  set('d-philo-quote',nl2br(d.philosophy.quote),true);
+  set('d-philo-body',d.philosophy.body);
+  set('d-val1',d.philosophy.val1);set('d-val2',d.philosophy.val2);
+  set('d-val3',d.philosophy.val3);set('d-val4',d.philosophy.val4);
+  // Contact
+  const fallback='추후 업데이트 예정';
+  set('d-email',d.contact.email||fallback);
+  set('d-phone',d.contact.phone||fallback);
+  set('d-address',d.contact.address||fallback);
+  set('d-hours',d.contact.hours||fallback);
+  // mailto
+  const sendBtn=document.querySelector('.btn-send');
+  if(sendBtn&&d.contact.mailto) sendBtn.dataset.mailto=d.contact.mailto;
+})();
+
+// Portfolio: load from admin storage
+function renderPortfolio() {
+  const STORE_KEY = 'gs_portfolio';
+  let projects = [];
+  try { projects = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch {}
+
+  const scroll = document.getElementById('port-scroll');
+  const countEl = document.getElementById('port-count');
+  if (!scroll) return;
+
+  if (projects.length === 0) {
+    scroll.innerHTML = `<div class="port-empty"><p>아직 등록된 프로젝트가 없습니다.<br/>관리자 페이지에서 프로젝트를 추가해 주세요.</p></div>`;
+    if (countEl) countEl.textContent = '';
+    return;
+  }
+
+  scroll.innerHTML = projects.map(p => `
+    <div class="port-item sr">
+      ${p.img
+        ? `<img src="${p.img}" alt="${p.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+           <div class="port-item-placeholder" style="display:none;">🌿</div>`
+        : `<div class="port-item-placeholder">🌿</div>`}
+      <div class="port-overlay"></div>
+      <div class="port-info">
+        <div class="port-tag">${p.category} · ${p.year}</div>
+        <h4>${p.title}</h4>
+      </div>
+    </div>
+  `).join('');
+
+  if (countEl) countEl.textContent = `총 ${projects.length}개 프로젝트`;
+
+  // re-observe new sr elements
+  scroll.querySelectorAll('.sr').forEach(el => obs.observe(el));
+}
+renderPortfolio();
+
+// Form
+function sendForm(){
+  const n=document.getElementById('fn').value;
+  const e=document.getElementById('fe').value;
+  const m=document.getElementById('fm').value;
+  if(!n||!e||!m){alert('이름, 이메일, 문의 내용을 입력해 주세요.');return;}
+  alert('문의가 접수되었습니다 🌿\n빠른 시간 내 연락 드리겠습니다. 감사합니다!');
+}
+</script>
+</body>
+</html>
