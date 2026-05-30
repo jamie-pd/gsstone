@@ -176,8 +176,8 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
   <div class="login-box">
     <div class="login-logo">금석<span>조경</span></div>
     <div class="login-sub">ADMIN PANEL</div>
-    <label class="login-label">아이디</label>
-    <input class="login-input" id="l-id" type="text" placeholder="admin"/>
+    <label class="login-label">이메일</label>
+    <input class="login-input" id="l-email" type="email" placeholder="admin@example.com"/>
     <label class="login-label">비밀번호</label>
     <input class="login-input" id="l-pw" type="password" placeholder="••••••••"/>
     <button class="login-btn" onclick="doLogin()">로그인</button>
@@ -392,6 +392,7 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDD6CVdV3JfzjdOtyusbD1I7yCpZ59_Cpw",
@@ -405,36 +406,46 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
+const auth = getAuth(app);
 
 window._db = db;
 window._storage = storage;
 window._fsLib = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, ref, uploadBytes, getDownloadURL };
 
-// AUTH
-const ADMIN_ID = 'admin', ADMIN_PW = '1234';
-
-window.doLogin = function() {
-  const id = document.getElementById('l-id').value.trim();
+// ── AUTH ──────────────────────────────────────────
+window.doLogin = async function() {
+  const email = document.getElementById('l-email').value.trim();
   const pw = document.getElementById('l-pw').value;
-  if (id === ADMIN_ID && pw === ADMIN_PW) {
-    sessionStorage.setItem('gs_admin', '1');
+  const errEl = document.getElementById('l-err');
+  errEl.textContent = '';
+  if (!email || !pw) { errEl.textContent = '이메일과 비밀번호를 입력해 주세요.'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pw);
+  } catch(e) {
+    errEl.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
+  }
+};
+
+document.getElementById('l-pw').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+document.getElementById('l-email').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('l-pw').focus(); });
+
+window.doLogout = async function() {
+  await signOut(auth);
+};
+
+// 로그인 상태 감지
+onAuthStateChanged(auth, user => {
+  if (user) {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('app').classList.add('visible');
     init();
   } else {
-    document.getElementById('l-err').textContent = '아이디 또는 비밀번호가 올바르지 않습니다.';
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('app').classList.remove('visible');
+    document.getElementById('l-email').value = '';
+    document.getElementById('l-pw').value = '';
   }
-};
-document.getElementById('l-pw').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
-document.getElementById('l-id').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('l-pw').focus(); });
-
-window.doLogout = function() {
-  sessionStorage.removeItem('gs_admin');
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('app').classList.remove('visible');
-  document.getElementById('l-id').value=''; document.getElementById('l-pw').value=''; document.getElementById('l-err').textContent='';
-};
-if (sessionStorage.getItem('gs_admin')) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app').classList.add('visible'); }
+});
 
 // PORTFOLIO
 let projects = [];
@@ -758,11 +769,14 @@ window.showStab = function(name, el) {
 document.getElementById('nav-port') || document.querySelectorAll('.sb-item')[0]?.setAttribute('id','nav-port');
 
 // INIT
+let _initialized = false;
 async function init() {
+  if (_initialized) return;
+  _initialized = true;
   await loadProjects();
   await loadSettingsFromFirebase();
 }
-if (sessionStorage.getItem('gs_admin')) init();
+
 </script>
 </body>
 </html>
