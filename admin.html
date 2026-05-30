@@ -117,12 +117,13 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 .editor-tool-sep{width:1px;height:24px;background:#e0dbd2;margin:0 4px;}
 .editor-content{min-height:400px;padding:28px 32px;outline:none;font-size:0.95rem;line-height:1.85;color:var(--ink);}
 .editor-content:empty::before{content:'여기에 프로젝트 내용을 작성하세요...';color:#b0aa9f;}
-.editor-content img{max-width:100%;border-radius:6px;margin:12px 0;display:block;}
+.editor-content img{max-width:100%;width:100%;border-radius:6px;margin:16px 0;display:block;height:auto;max-height:480px;object-fit:cover;}
 .editor-content h2{font-size:1.4rem;font-weight:700;margin:24px 0 12px;color:var(--forest);}
 .editor-content h3{font-size:1.1rem;font-weight:600;margin:20px 0 10px;color:var(--forest);}
 .editor-content p{margin:8px 0;}
 .editor-content ul,
 .editor-content ol{padding-left:24px;margin:8px 0;}
+.editor-content li{margin:4px 0;}
 
 /* MODAL */
 .modal-backdrop{position:fixed;inset:0;background:rgba(20,40,18,0.55);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s;padding:20px;}
@@ -612,14 +613,41 @@ window.removeCover = function() { coverData = null; removeCoverUI(); document.ge
 
 // BODY IMAGE INSERT
 window.insertImage = function() { document.getElementById('body-img-file').click(); };
+
+function resizeImage(file, maxWidth, maxHeight, quality) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = h * maxWidth / w; w = maxWidth; }
+        if (h > maxHeight) { w = w * maxHeight / h; h = maxHeight; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 window.handleBodyImage = async function(input) {
   const file = input.files[0];
   if (!file) return;
-  showToast('이미지 업로드 중...');
+  showToast('이미지 처리 중...');
   try {
+    // 웹: 최대 1200px, 모바일 대응: 품질 0.85
+    const resized = await resizeImage(file, 1200, 900, 0.85);
+
+    // Base64 → Blob 변환 후 Firebase Storage 업로드
+    const res = await fetch(resized);
+    const blob = await res.blob();
     const { ref, uploadBytes, getDownloadURL } = window._fsLib;
     const storageRef = ref(storage, `body/${Date.now()}_${file.name}`);
-    const snap = await uploadBytes(storageRef, file);
+    const snap = await uploadBytes(storageRef, blob);
     const url = await getDownloadURL(snap.ref);
     document.getElementById('editor-content').focus();
     document.execCommand('insertImage', false, url);
@@ -627,6 +655,7 @@ window.handleBodyImage = async function(input) {
   } catch(e) {
     showToast('업로드 실패: ' + e.message, true);
   }
+  input.value = '';
 };
 
 // EDITOR FORMAT
