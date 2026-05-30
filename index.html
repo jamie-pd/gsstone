@@ -447,120 +447,6 @@ window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>60));
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:0.1});
 document.querySelectorAll('.sr').forEach(el=>obs.observe(el));
 
-// ── SITE SETTINGS INJECTION ───────────────────────
-(function applySiteSettings(){
-  const STORE='gs_site';
-  const DEFAULTS={
-    hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.'},
-    about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도'},
-    services:[
-      {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
-      {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
-      {icon:'🏢',name:'상업 & 공공 조경',desc:'기업 사옥, 쇼핑몰, 공원 등 대규모 프로젝트를 전문적으로 진행합니다.'},
-      {icon:'🪨',name:'조경 구조물',desc:'석축, 데크, 퍼걸러, 연못 등 다양한 조경 구조물을 설계 및 시공합니다.'},
-      {icon:'💧',name:'수경 시설 조성',desc:'폭포, 연못, 분수로 시각적·청각적 편안함을 동시에 드립니다.'},
-      {icon:'✂️',name:'유지 관리',desc:'완공 후에도 아름다움이 지속되도록 정기적인 관리 서비스를 제공합니다.'},
-    ],
-    philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰'},
-    contact:{email:'',phone:'',address:'',hours:'평일 09:00 – 18:00',mailto:''}
-  };
-  function deepMerge(target,source){
-    const out=Object.assign({},target);
-    for(const k in source){
-      if(source[k]&&typeof source[k]==='object'&&!Array.isArray(source[k])){
-        out[k]=deepMerge(target[k]||{},source[k]);
-      } else { out[k]=source[k]; }
-    }
-    return out;
-  }
-  let d=DEFAULTS;
-  try{
-    const saved=JSON.parse(localStorage.getItem(STORE));
-    if(saved) d=deepMerge(DEFAULTS,saved);
-  }catch{}
-
-  function set(id,val,isHtml){if(!val)return;const el=document.getElementById(id);if(el){if(isHtml)el.innerHTML=val;else el.textContent=val;}}
-  function nl2br(s){return(s||'').replace(/\n/g,'<br/>');}
-
-  // Hero
-  set('d-hero-eyebrow',d.hero.eyebrow);
-  set('d-hero-thin',d.hero.thin);
-  set('d-hero-title',nl2br(d.hero.title),true);
-  set('d-hero-sub',d.hero.sub);
-  // About
-  set('d-about-eyebrow',d.about.eyebrow);
-  set('d-about-title',nl2br(d.about.title),true);
-  set('d-about-body',d.about.body);
-  set('d-stat1n',d.about.stat1n);set('d-stat1l',d.about.stat1l);
-  set('d-stat2n',d.about.stat2n);set('d-stat2l',d.about.stat2l);
-  set('d-stat3n',d.about.stat3n);set('d-stat3l',d.about.stat3l);
-  // Services
-  const grid=document.getElementById('d-svc-grid');
-  if(grid&&d.services){
-    const delays=['','d1','d2','','d1','d2'];
-    grid.innerHTML=d.services.map((s,i)=>`
-      <div class="svc-card sr ${delays[i]}">
-        <div class="svc-num">0${i+1}</div>
-        <span class="svc-icon">${s.icon}</span>
-        <h3>${s.name}</h3>
-        <p>${s.desc}</p>
-      </div>`).join('');
-    grid.querySelectorAll('.sr').forEach(el=>obs.observe(el));
-  }
-  // Philosophy
-  set('d-philo-title',nl2br(d.philosophy.title),true);
-  set('d-philo-quote',nl2br(d.philosophy.quote),true);
-  set('d-philo-body',d.philosophy.body);
-  set('d-val1',d.philosophy.val1);set('d-val2',d.philosophy.val2);
-  set('d-val3',d.philosophy.val3);set('d-val4',d.philosophy.val4);
-  // Contact
-  const fallback='추후 업데이트 예정';
-  set('d-email',d.contact.email||fallback);
-  set('d-phone',d.contact.phone||fallback);
-  set('d-address',d.contact.address||fallback);
-  set('d-hours',d.contact.hours||fallback);
-  // mailto
-  const sendBtn=document.querySelector('.btn-send');
-  if(sendBtn&&d.contact.mailto) sendBtn.dataset.mailto=d.contact.mailto;
-})();
-
-// Portfolio: load from admin storage
-function renderPortfolio() {
-  const STORE_KEY = 'gs_portfolio';
-  let projects = [];
-  try { projects = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch {}
-
-  const scroll = document.getElementById('port-scroll');
-  const countEl = document.getElementById('port-count');
-  if (!scroll) return;
-
-  if (projects.length === 0) {
-    scroll.innerHTML = `<div class="port-empty"><p>아직 등록된 프로젝트가 없습니다.<br/>관리자 페이지에서 프로젝트를 추가해 주세요.</p></div>`;
-    if (countEl) countEl.textContent = '';
-    return;
-  }
-
-  scroll.innerHTML = projects.map(p => `
-    <div class="port-item sr">
-      ${p.img
-        ? `<img src="${p.img}" alt="${p.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-           <div class="port-item-placeholder" style="display:none;">🌿</div>`
-        : `<div class="port-item-placeholder">🌿</div>`}
-      <div class="port-overlay"></div>
-      <div class="port-info">
-        <div class="port-tag">${p.category} · ${p.year}</div>
-        <h4>${p.title}</h4>
-      </div>
-    </div>
-  `).join('');
-
-  if (countEl) countEl.textContent = `총 ${projects.length}개 프로젝트`;
-
-  // re-observe new sr elements
-  scroll.querySelectorAll('.sr').forEach(el => obs.observe(el));
-}
-renderPortfolio();
-
 // Form
 function sendForm(){
   const n=document.getElementById('fn').value;
@@ -569,6 +455,179 @@ function sendForm(){
   if(!n||!e||!m){alert('이름, 이메일, 문의 내용을 입력해 주세요.');return;}
   alert('문의가 접수되었습니다 🌿\n빠른 시간 내 연락 드리겠습니다. 감사합니다!');
 }
+</script>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, collection, getDocs, orderBy, query, doc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDD6CVdV3JfzjdOtyusbD1I7yCpZ59_Cpw",
+  authDomain: "gsstone.firebaseapp.com",
+  projectId: "gsstone",
+  storageBucket: "gsstone.firebasestorage.app",
+  messagingSenderId: "125014531671",
+  appId: "1:125014531671:web:5cd9324391874e07820d12"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const DEFAULTS={
+  hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.'},
+  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도'},
+  services:[
+    {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
+    {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
+    {icon:'🏢',name:'상업 & 공공 조경',desc:'기업 사옥, 쇼핑몰, 공원 등 대규모 프로젝트를 전문적으로 진행합니다.'},
+    {icon:'🪨',name:'조경 구조물',desc:'석축, 데크, 퍼걸러, 연못 등 다양한 조경 구조물을 설계 및 시공합니다.'},
+    {icon:'💧',name:'수경 시설 조성',desc:'폭포, 연못, 분수로 시각적·청각적 편안함을 동시에 드립니다.'},
+    {icon:'✂️',name:'유지 관리',desc:'완공 후에도 아름다움이 지속되도록 정기적인 관리 서비스를 제공합니다.'},
+  ],
+  philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰'},
+  contact:{email:'',phone:'',address:'',hours:'평일 09:00 – 18:00',mailto:''}
+};
+
+function set(id,val,isHtml){if(!val)return;const el=document.getElementById(id);if(el){if(isHtml)el.innerHTML=val;else el.textContent=val;}}
+function nl2br(s){return(s||'').replace(/\n/g,'<br/>');}
+
+// ── SETTINGS ──────────────────────────────────────
+async function applySettings(){
+  try {
+    const snap = await getDocs(collection(db,'settings'));
+    const saved = {};
+    snap.docs.forEach(d=>{ saved[d.id]=d.data(); });
+    const d = Object.assign({},DEFAULTS,saved);
+
+    // Hero
+    set('d-hero-eyebrow',(d.hero||DEFAULTS.hero).eyebrow);
+    set('d-hero-thin',(d.hero||DEFAULTS.hero).thin);
+    set('d-hero-title',nl2br((d.hero||DEFAULTS.hero).title),true);
+    set('d-hero-sub',(d.hero||DEFAULTS.hero).sub);
+    // About
+    const ab=d.about||DEFAULTS.about;
+    set('d-about-eyebrow',ab.eyebrow);
+    set('d-about-title',nl2br(ab.title),true);
+    set('d-about-body',ab.body);
+    set('d-stat1n',ab.stat1n);set('d-stat1l',ab.stat1l);
+    set('d-stat2n',ab.stat2n);set('d-stat2l',ab.stat2l);
+    set('d-stat3n',ab.stat3n);set('d-stat3l',ab.stat3l);
+    // Services
+    const svcs = d.services?.items || DEFAULTS.services;
+    const grid=document.getElementById('d-svc-grid');
+    if(grid&&svcs){
+      const delays=['','d1','d2','','d1','d2'];
+      grid.innerHTML=svcs.map((s,i)=>`
+        <div class="svc-card sr ${delays[i]}">
+          <div class="svc-num">0${i+1}</div>
+          <span class="svc-icon">${s.icon}</span>
+          <h3>${s.name}</h3>
+          <p>${s.desc}</p>
+        </div>`).join('');
+      grid.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+    }
+    // Philosophy
+    const ph=d.philosophy||DEFAULTS.philosophy;
+    set('d-philo-title',nl2br(ph.title),true);
+    set('d-philo-quote',nl2br(ph.quote),true);
+    set('d-philo-body',ph.body);
+    set('d-val1',ph.val1);set('d-val2',ph.val2);
+    set('d-val3',ph.val3);set('d-val4',ph.val4);
+    // Contact
+    const ct=d.contact||DEFAULTS.contact;
+    const fallback='추후 업데이트 예정';
+    set('d-email',ct.email||fallback);
+    set('d-phone',ct.phone||fallback);
+    set('d-address',ct.address||fallback);
+    set('d-hours',ct.hours||fallback);
+  } catch(e) {
+    // Firebase 오류 시 기본값 사용
+    applyDefaults();
+  }
+}
+
+function applyDefaults(){
+  const d=DEFAULTS;
+  set('d-hero-eyebrow',d.hero.eyebrow);set('d-hero-thin',d.hero.thin);
+  set('d-hero-title',nl2br(d.hero.title),true);set('d-hero-sub',d.hero.sub);
+  set('d-about-eyebrow',d.about.eyebrow);set('d-about-title',nl2br(d.about.title),true);
+  set('d-about-body',d.about.body);
+  set('d-stat1n',d.about.stat1n);set('d-stat1l',d.about.stat1l);
+  set('d-stat2n',d.about.stat2n);set('d-stat2l',d.about.stat2l);
+  set('d-stat3n',d.about.stat3n);set('d-stat3l',d.about.stat3l);
+  const grid=document.getElementById('d-svc-grid');
+  if(grid){
+    const delays=['','d1','d2','','d1','d2'];
+    grid.innerHTML=d.services.map((s,i)=>`<div class="svc-card sr ${delays[i]}"><div class="svc-num">0${i+1}</div><span class="svc-icon">${s.icon}</span><h3>${s.name}</h3><p>${s.desc}</p></div>`).join('');
+    grid.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+  }
+  set('d-philo-title',nl2br(d.philosophy.title),true);set('d-philo-quote',nl2br(d.philosophy.quote),true);
+  set('d-philo-body',d.philosophy.body);
+  set('d-val1',d.philosophy.val1);set('d-val2',d.philosophy.val2);
+  set('d-val3',d.philosophy.val3);set('d-val4',d.philosophy.val4);
+  set('d-email','추후 업데이트 예정');set('d-phone','추후 업데이트 예정');
+  set('d-address','추후 업데이트 예정');set('d-hours',d.contact.hours);
+}
+
+// ── PORTFOLIO ─────────────────────────────────────
+async function renderPortfolio(){
+  const scroll=document.getElementById('port-scroll');
+  const countEl=document.getElementById('port-count');
+  if(!scroll) return;
+  try {
+    const q=query(collection(db,'projects'),orderBy('createdAt','desc'));
+    const snap=await getDocs(q);
+    const projects=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(!projects.length){
+      scroll.innerHTML=`<div class="port-empty"><p>아직 등록된 프로젝트가 없습니다.</p></div>`;
+      if(countEl) countEl.textContent='';
+      return;
+    }
+    scroll.innerHTML=projects.map(p=>`
+      <div class="port-item sr" onclick="openProjectDetail('${p.id}')" style="cursor:pointer">
+        ${p.coverUrl
+          ?`<img src="${p.coverUrl}" alt="${p.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+            <div class="port-item-placeholder" style="display:none">🌿</div>`
+          :`<div class="port-item-placeholder">🌿</div>`}
+        <div class="port-overlay"></div>
+        <div class="port-info">
+          <div class="port-tag">${p.category} · ${p.year}</div>
+          <h4>${p.title}</h4>
+        </div>
+      </div>`).join('');
+    if(countEl) countEl.textContent=`총 ${projects.length}개 프로젝트`;
+    scroll.querySelectorAll('.sr').forEach(el=>obs.observe(el));
+    window._projects=projects;
+  } catch(e){
+    scroll.innerHTML=`<div class="port-empty"><p>프로젝트를 불러오는 중 오류가 발생했습니다.</p></div>`;
+  }
+}
+
+// ── PROJECT DETAIL MODAL ───────────────────────────
+window.openProjectDetail = function(id){
+  const p=(window._projects||[]).find(x=>x.id===id);
+  if(!p) return;
+  const modal=document.createElement('div');
+  modal.id='proj-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(10,25,10,0.8);z-index:9000;overflow-y:auto;display:flex;justify-content:center;padding:40px 20px;';
+  modal.innerHTML=`
+    <div style="background:#fdfaf4;max-width:800px;width:100%;border-radius:8px;overflow:hidden;position:relative;">
+      <button onclick="document.getElementById('proj-modal').remove()" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.15);border:none;border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;z-index:1">✕</button>
+      ${p.coverUrl?`<img src="${p.coverUrl}" style="width:100%;aspect-ratio:16/9;object-fit:cover;" alt="${p.title}"/>`:''}
+      <div style="padding:36px 40px;">
+        <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:#5a8f4a;margin-bottom:10px">${p.category} · ${p.year}년${p.location?' · '+p.location:''}</div>
+        <h2 style="font-size:1.8rem;font-weight:700;color:#1e3d1a;margin-bottom:24px;letter-spacing:-0.02em">${p.title}</h2>
+        <div style="font-size:0.95rem;line-height:1.9;color:#5a5040">${p.body||'내용이 없습니다.'}</div>
+      </div>
+    </div>`;
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
+};
+
+// INIT
+applySettings();
+renderPortfolio();
 </script>
 </body>
 </html>
