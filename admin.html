@@ -4,27 +4,27 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>금석조경 — 관리자</title>
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --forest:#1e3d1a;--moss:#3a6b34;--fern:#5a8f4a;--sage:#8cb87a;
   --mist:#c8ddc0;--parch:#f7f2ea;--paper:#fdfaf4;--stone:#8a8278;
-  --ink:#1c1a17;--danger:#c0392b;--warn:#e67e22;--sidebar-w:240px;
+  --ink:#1c1a17;--danger:#c0392b;--sidebar-w:240px;
 }
-body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);min-height:100vh;display:flex;}
+body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min-height:100vh;display:flex;}
 
 /* LOGIN */
 #login-screen{position:fixed;inset:0;background:var(--forest);display:flex;align-items:center;justify-content:center;z-index:1000;transition:opacity 0.5s,visibility 0.5s;}
 #login-screen.hidden{opacity:0;visibility:hidden;}
 .login-box{background:var(--paper);padding:52px 48px;width:380px;text-align:center;}
-.login-logo{font-family:'Nanum Myeongjo',serif;font-size:1.8rem;font-weight:800;color:var(--forest);margin-bottom:6px;}
+.login-logo{font-size:1.8rem;font-weight:700;color:var(--forest);margin-bottom:6px;}
 .login-logo span{color:var(--sage);}
 .login-sub{font-size:0.78rem;color:var(--stone);letter-spacing:0.1em;margin-bottom:36px;}
 .login-label{display:block;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);text-align:left;margin-bottom:8px;}
-.login-input{width:100%;border:none;border-bottom:1.5px solid var(--mist);background:transparent;padding:10px 0;font-size:0.95rem;color:var(--ink);font-family:'Noto Sans KR',sans-serif;outline:none;margin-bottom:24px;transition:border-color 0.3s;}
+.login-input{width:100%;border:none;border-bottom:1.5px solid var(--mist);background:transparent;padding:10px 0;font-size:0.95rem;color:var(--ink);font-family:'Pretendard',sans-serif;outline:none;margin-bottom:24px;transition:border-color 0.3s;}
 .login-input:focus{border-color:var(--fern);}
-.login-btn{width:100%;background:var(--forest);color:white;border:none;padding:14px;font-size:0.9rem;letter-spacing:0.1em;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:background 0.3s;margin-top:4px;}
+.login-btn{width:100%;background:var(--forest);color:white;border:none;padding:14px;font-size:0.9rem;cursor:pointer;font-family:'Pretendard',sans-serif;transition:background 0.3s;}
 .login-btn:hover{background:var(--moss);}
 .login-err{font-size:0.8rem;color:var(--danger);margin-top:14px;min-height:20px;}
 
@@ -35,7 +35,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
 /* SIDEBAR */
 .sidebar{width:var(--sidebar-w);background:var(--forest);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;}
 .sb-logo{padding:28px 24px;border-bottom:1px solid rgba(255,255,255,0.08);}
-.sb-logo-text{font-family:'Nanum Myeongjo',serif;font-size:1.2rem;font-weight:800;color:var(--paper);}
+.sb-logo-text{font-size:1.2rem;font-weight:700;color:var(--paper);}
 .sb-logo-text span{color:var(--sage);}
 .sb-badge{font-size:0.65rem;letter-spacing:0.1em;color:rgba(200,221,192,0.4);margin-top:4px;}
 .sb-nav{flex:1;padding:20px 0;overflow-y:auto;}
@@ -43,7 +43,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
 .sb-item{display:flex;align-items:center;gap:10px;padding:11px 24px;font-size:0.85rem;color:rgba(200,221,192,0.65);cursor:pointer;transition:all 0.2s;border-left:2px solid transparent;user-select:none;}
 .sb-item:hover{background:rgba(255,255,255,0.06);color:var(--mist);}
 .sb-item.active{background:rgba(140,184,122,0.12);color:var(--mist);border-left-color:var(--sage);}
-.sb-item .icon{font-size:1rem;width:20px;text-align:center;}
 .sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
 .sb-logout{display:flex;align-items:center;gap:10px;font-size:0.82rem;color:rgba(200,221,192,0.45);cursor:pointer;transition:color 0.2s;}
 .sb-logout:hover{color:var(--mist);}
@@ -51,120 +50,128 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
 /* MAIN */
 .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
 .topbar{background:white;padding:0 36px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,0.06);position:sticky;top:0;z-index:50;}
-.topbar-title{font-family:'Nanum Myeongjo',serif;font-size:1.1rem;font-weight:700;color:var(--forest);}
+.topbar-title{font-size:1.1rem;font-weight:700;color:var(--forest);}
 .topbar-right{display:flex;align-items:center;gap:16px;}
 .topbar-site-link{font-size:0.78rem;color:var(--fern);text-decoration:none;display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--mist);border-radius:3px;transition:all 0.2s;}
 .topbar-site-link:hover{background:var(--mist);}
-.topbar-admin{font-size:0.8rem;color:var(--stone);}
 .content{padding:36px;flex:1;}
 
 /* PAGES */
 .page{display:none;}
 .page.active{display:block;}
 .page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;}
-.page-header h1{font-family:'Nanum Myeongjo',serif;font-size:1.6rem;font-weight:800;color:var(--forest);}
+.page-header h1{font-size:1.6rem;font-weight:700;color:var(--forest);}
 .page-header p{font-size:0.85rem;color:var(--stone);margin-top:4px;}
 
+/* PORTFOLIO LIST */
+.port-list{display:flex;flex-direction:column;gap:12px;}
+.port-row{background:white;border-radius:8px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:box-shadow 0.2s;}
+.port-row:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+.port-row-thumb{width:72px;height:56px;border-radius:6px;overflow:hidden;background:#e8e4dc;flex-shrink:0;}
+.port-row-thumb img{width:100%;height:100%;object-fit:cover;}
+.port-row-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#b0aa9f;}
+.port-row-info{flex:1;}
+.port-row-title{font-weight:600;color:var(--forest);font-size:0.95rem;margin-bottom:3px;}
+.port-row-meta{font-size:0.78rem;color:var(--stone);}
+.port-row-actions{display:flex;gap:8px;flex-shrink:0;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:white;padding:20px 24px;border-radius:6px;border-left:3px solid var(--sage);}
+.stat-card-n{font-size:2rem;font-weight:700;color:var(--forest);}
+.stat-card-l{font-size:0.78rem;color:var(--stone);margin-top:3px;}
+
 /* SETTINGS TABS */
-.settings-tabs{display:flex;gap:0;border-bottom:1.5px solid #e0dbd2;margin-bottom:32px;}
+.settings-tabs{display:flex;gap:0;border-bottom:1.5px solid #e0dbd2;margin-bottom:28px;}
 .stab{padding:10px 22px;font-size:0.85rem;color:var(--stone);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all 0.2s;user-select:none;}
 .stab:hover{color:var(--forest);}
 .stab.active{color:var(--forest);border-bottom-color:var(--fern);font-weight:500;}
-
-/* SETTINGS PANELS */
 .settings-panel{display:none;}
 .settings-panel.active{display:block;}
 .settings-card{background:white;border-radius:8px;padding:28px 32px;margin-bottom:20px;}
-.settings-card-title{font-family:'Nanum Myeongjo',serif;font-size:1rem;font-weight:700;color:var(--forest);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #f0ede6;}
-
-/* SERVICES EDITOR */
+.settings-card-title{font-size:1rem;font-weight:600;color:var(--forest);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #f0ede6;}
+.stats-editor{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.stat-edit-card{background:#faf8f4;border:1px solid #e8e4dc;border-radius:6px;padding:16px;}
 .svc-editor-list{display:flex;flex-direction:column;gap:12px;}
 .svc-editor-item{background:#faf8f4;border:1px solid #e8e4dc;border-radius:6px;padding:16px 18px;}
 .svc-editor-item-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .svc-editor-num{font-size:0.7rem;letter-spacing:0.15em;color:var(--stone);min-width:24px;}
-.svc-editor-icon-sel{border:1.5px solid #e0dbd2;border-radius:4px;padding:5px 8px;font-size:0.95rem;background:white;cursor:pointer;outline:none;}
 .svc-editor-fields{display:grid;grid-template-columns:1fr 2fr;gap:12px;}
-
-/* STATS EDITOR */
-.stats-editor{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.stat-edit-card{background:#faf8f4;border:1px solid #e8e4dc;border-radius:6px;padding:16px;}
+.save-bar{background:white;border-top:1px solid #e8e4dc;padding:16px 36px;display:flex;align-items:center;justify-content:flex-end;gap:12px;position:sticky;bottom:0;z-index:40;}
+.save-hint{font-size:0.8rem;color:var(--stone);flex:1;}
 
 /* FORM */
 .form-group{margin-bottom:20px;}
 .form-label{display:block;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:8px;}
 .form-hint{font-size:0.72rem;color:#b0aa9f;margin-top:5px;}
-.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid #e0dbd2;padding:10px 14px;font-size:0.9rem;color:var(--ink);font-family:'Noto Sans KR',sans-serif;border-radius:4px;outline:none;transition:border-color 0.2s;background:white;}
+.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid #e0dbd2;padding:10px 14px;font-size:0.9rem;color:var(--ink);font-family:'Pretendard',sans-serif;border-radius:4px;outline:none;transition:border-color 0.2s;background:white;}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--fern);}
-.form-textarea{resize:vertical;min-height:75px;}
+.form-textarea{resize:vertical;min-height:80px;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.save-bar{background:white;border-top:1px solid #e8e4dc;padding:16px 36px;display:flex;align-items:center;justify-content:flex-end;gap:12px;position:sticky;bottom:0;z-index:40;}
-.save-hint{font-size:0.8rem;color:var(--stone);flex:1;}
 
-/* PORTFOLIO */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
-.stat-card{background:white;padding:22px 24px;border-radius:6px;border-left:3px solid var(--sage);}
-.stat-card-n{font-family:'Nanum Myeongjo',serif;font-size:2rem;font-weight:800;color:var(--forest);}
-.stat-card-l{font-size:0.78rem;color:var(--stone);margin-top:3px;}
-.port-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
-.port-card{background:white;border-radius:8px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;}
-.port-card:hover{box-shadow:0 8px 24px rgba(0,0,0,0.1);transform:translateY(-2px);}
-.port-card-img{position:relative;aspect-ratio:4/3;overflow:hidden;background:#e8e4dc;}
-.port-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
-.port-card:hover .port-card-img img{transform:scale(1.04);}
-.port-card-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:#c0bab2;}
-.port-card-body{padding:16px 18px;}
-.port-card-cat{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--fern);margin-bottom:5px;}
-.port-card-title{font-family:'Nanum Myeongjo',serif;font-size:1rem;font-weight:700;color:var(--forest);margin-bottom:4px;}
-.port-card-year{font-size:0.78rem;color:var(--stone);}
-.port-card-actions{display:flex;gap:8px;padding:12px 18px 16px;border-top:1px solid #f0ede6;}
-.btn-add{background:var(--forest);color:white;border:none;padding:11px 24px;font-size:0.85rem;letter-spacing:0.06em;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;gap:8px;transition:background 0.2s;border-radius:3px;}
-.btn-add:hover{background:var(--moss);}
-.btn-edit{flex:1;background:var(--parch);color:var(--forest);border:1px solid var(--mist);padding:8px;font-size:0.78rem;cursor:pointer;font-family:'Noto Sans KR',sans-serif;border-radius:3px;transition:background 0.2s;}
-.btn-edit:hover{background:var(--mist);}
-.btn-del{background:#fff0ee;color:var(--danger);border:1px solid #f5c6c2;padding:8px 14px;font-size:0.78rem;cursor:pointer;font-family:'Noto Sans KR',sans-serif;border-radius:3px;transition:background 0.2s;}
-.btn-del:hover{background:#fde8e5;}
-.empty-state{text-align:center;padding:80px 40px;color:var(--stone);}
-.empty-icon{font-size:3rem;margin-bottom:16px;opacity:0.4;}
-.empty-state p{font-size:0.9rem;line-height:1.7;}
+/* BLOG EDITOR */
+.editor-wrap{background:white;border-radius:8px;overflow:hidden;}
+.editor-toolbar{padding:14px 20px;border-bottom:1px solid #f0ede6;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.editor-tool-btn{background:#f5f0e8;border:none;border-radius:4px;padding:7px 12px;font-size:0.82rem;cursor:pointer;font-family:'Pretendard',sans-serif;color:var(--ink);transition:background 0.2s;display:flex;align-items:center;gap:5px;}
+.editor-tool-btn:hover{background:var(--mist);}
+.editor-tool-sep{width:1px;height:24px;background:#e0dbd2;margin:0 4px;}
+.editor-content{min-height:400px;padding:28px 32px;outline:none;font-size:0.95rem;line-height:1.85;color:var(--ink);}
+.editor-content:empty::before{content:'여기에 프로젝트 내용을 작성하세요...';color:#b0aa9f;}
+.editor-content img{max-width:100%;border-radius:6px;margin:12px 0;display:block;}
+.editor-content h2{font-size:1.4rem;font-weight:700;margin:24px 0 12px;color:var(--forest);}
+.editor-content h3{font-size:1.1rem;font-weight:600;margin:20px 0 10px;color:var(--forest);}
+.editor-content p{margin:8px 0;}
+.editor-content ul,
+.editor-content ol{padding-left:24px;margin:8px 0;}
 
 /* MODAL */
 .modal-backdrop{position:fixed;inset:0;background:rgba(20,40,18,0.55);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s;padding:20px;}
 .modal-backdrop.open{opacity:1;visibility:visible;}
-.modal{background:white;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;border-radius:8px;transform:translateY(20px);transition:transform 0.3s;}
+.modal{background:white;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;border-radius:8px;transform:translateY(20px);transition:transform 0.3s;}
 .modal-backdrop.open .modal{transform:translateY(0);}
-.modal-header{padding:24px 28px 20px;border-bottom:1px solid #f0ede6;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:white;z-index:1;}
-.modal-title{font-family:'Nanum Myeongjo',serif;font-size:1.15rem;font-weight:700;color:var(--forest);}
-.modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--stone);padding:4px;transition:color 0.2s;}
-.modal-close:hover{color:var(--ink);}
-.modal-body{padding:24px 28px;}
-.modal-footer{padding:16px 28px 24px;display:flex;gap:10px;justify-content:flex-end;}
-.img-upload-area{border:2px dashed #d5d0c8;border-radius:6px;padding:32px;text-align:center;cursor:pointer;transition:all 0.2s;background:#faf8f4;}
-.img-upload-area:hover{border-color:var(--sage);background:#f2f8ee;}
-.img-upload-area.dragover{border-color:var(--fern);background:#eef6e8;}
-.img-upload-icon{font-size:2rem;margin-bottom:10px;opacity:0.5;}
-.img-upload-text{font-size:0.85rem;color:var(--stone);}
-.img-upload-sub{font-size:0.75rem;color:#b0aa9f;margin-top:4px;}
-.img-preview{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:4/3;}
-.img-preview img{width:100%;height:100%;object-fit:cover;}
-.img-preview-remove{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);color:white;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;}
-.img-divider{display:flex;align-items:center;gap:12px;margin:12px 0;color:var(--stone);font-size:0.75rem;}
-.img-divider::before,.img-divider::after{content:'';flex:1;height:1px;background:#e0dbd2;}
+.modal-header{padding:22px 28px 18px;border-bottom:1px solid #f0ede6;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:white;z-index:1;}
+.modal-title{font-size:1.1rem;font-weight:700;color:var(--forest);}
+.modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--stone);}
+.modal-body{padding:22px 28px;}
+.modal-footer{padding:14px 28px 22px;display:flex;gap:10px;justify-content:flex-end;}
 
 /* BUTTONS */
-.btn-primary{background:var(--forest);color:white;border:none;padding:11px 28px;font-size:0.88rem;cursor:pointer;font-family:'Noto Sans KR',sans-serif;border-radius:3px;transition:background 0.2s;letter-spacing:0.04em;}
+.btn-add{background:var(--forest);color:white;border:none;padding:11px 22px;font-size:0.85rem;cursor:pointer;font-family:'Pretendard',sans-serif;display:flex;align-items:center;gap:8px;transition:background 0.2s;border-radius:3px;font-weight:500;}
+.btn-add:hover{background:var(--moss);}
+.btn-primary{background:var(--forest);color:white;border:none;padding:11px 28px;font-size:0.88rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;transition:background 0.2s;font-weight:500;}
 .btn-primary:hover{background:var(--moss);}
-.btn-secondary{background:white;color:var(--stone);border:1.5px solid #e0dbd2;padding:11px 24px;font-size:0.88rem;cursor:pointer;font-family:'Noto Sans KR',sans-serif;border-radius:3px;transition:all 0.2s;}
+.btn-secondary{background:white;color:var(--stone);border:1.5px solid #e0dbd2;padding:11px 24px;font-size:0.88rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;transition:all 0.2s;}
 .btn-secondary:hover{border-color:var(--stone);}
+.btn-edit{background:var(--parch);color:var(--forest);border:1px solid var(--mist);padding:7px 14px;font-size:0.78rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;transition:background 0.2s;}
+.btn-edit:hover{background:var(--mist);}
+.btn-del{background:#fff0ee;color:var(--danger);border:1px solid #f5c6c2;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;}
+.btn-del:hover{background:#fde8e5;}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:80px 40px;color:var(--stone);}
+.empty-icon{font-size:3rem;margin-bottom:16px;opacity:0.4;}
+.empty-state p{font-size:0.9rem;line-height:1.7;}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--stone);font-size:0.9rem;gap:10px;}
+.spinner{width:20px;height:20px;border:2px solid var(--mist);border-top-color:var(--fern);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
 /* TOAST */
 .toast{position:fixed;bottom:32px;right:32px;background:var(--forest);color:white;padding:14px 22px;border-radius:4px;font-size:0.85rem;z-index:9000;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.error{background:var(--danger);}
+
+/* COVER IMAGE */
+.cover-upload{border:2px dashed #d5d0c8;border-radius:6px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:#faf8f4;}
+.cover-upload:hover{border-color:var(--sage);background:#f2f8ee;}
+.cover-preview{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:16/9;}
+.cover-preview img{width:100%;height:100%;object-fit:cover;}
+.cover-remove{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);color:white;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.9rem;}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">금석<span>조경</span></div>
@@ -178,7 +185,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <aside class="sidebar">
     <div class="sb-logo">
@@ -187,16 +193,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
     </div>
     <nav class="sb-nav">
       <div class="sb-section">콘텐츠</div>
-      <div class="sb-item active" id="nav-portfolio" onclick="showPage('portfolio',this)">
-        <span class="icon">🖼️</span> 포트폴리오
-      </div>
+      <div class="sb-item active" onclick="showPage('portfolio',this)">🖼️ 포트폴리오</div>
       <div class="sb-section">사이트 설정</div>
-      <div class="sb-item" id="nav-settings" onclick="showPage('settings',this)">
-        <span class="icon">✏️</span> 텍스트 & 정보 수정
-      </div>
+      <div class="sb-item" onclick="showPage('settings',this)">✏️ 텍스트 & 정보</div>
     </nav>
     <div class="sb-bottom">
-      <div class="sb-logout" onclick="doLogout()"><span>↩</span> 로그아웃</div>
+      <div class="sb-logout" onclick="doLogout()">↩ 로그아웃</div>
     </div>
   </aside>
 
@@ -204,38 +206,109 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">포트폴리오 관리</div>
       <div class="topbar-right">
-        <a href="geumseok-landscape.html" target="_blank" class="topbar-site-link">🌿 메인 사이트 보기 ↗</a>
-        <span class="topbar-admin">관리자</span>
+        <a href="index.html" target="_blank" class="topbar-site-link">🌿 메인 사이트 ↗</a>
+        <span style="font-size:0.8rem;color:var(--stone)">관리자</span>
       </div>
     </div>
-
     <div class="content">
 
-      <!-- ───── PORTFOLIO PAGE ───── -->
+      <!-- PORTFOLIO -->
       <div class="page active" id="page-portfolio">
         <div class="page-header">
-          <div><h1>포트폴리오</h1><p>프로젝트 사진 및 정보를 등록·관리합니다</p></div>
-          <button class="btn-add" onclick="openModal()">＋ 프로젝트 추가</button>
+          <div><h1>포트폴리오</h1><p>프로젝트를 등록하고 관리합니다</p></div>
+          <button class="btn-add" onclick="openEditor()">＋ 프로젝트 추가</button>
         </div>
         <div class="stats-row">
-          <div class="stat-card"><div class="stat-card-n" id="stat-total">0</div><div class="stat-card-l">전체 프로젝트</div></div>
-          <div class="stat-card" style="border-left-color:var(--warn)"><div class="stat-card-n" id="stat-year">0</div><div class="stat-card-l">올해 등록</div></div>
-          <div class="stat-card" style="border-left-color:#4a90d9"><div class="stat-card-n" id="stat-cats">0</div><div class="stat-card-l">카테고리 수</div></div>
+          <div class="stat-card"><div class="stat-card-n" id="stat-total">-</div><div class="stat-card-l">전체 프로젝트</div></div>
+          <div class="stat-card" style="border-left-color:#e67e22"><div class="stat-card-n" id="stat-year">-</div><div class="stat-card-l">올해 등록</div></div>
+          <div class="stat-card" style="border-left-color:#4a90d9"><div class="stat-card-n" id="stat-cats">-</div><div class="stat-card-l">카테고리 수</div></div>
         </div>
-        <div class="port-grid" id="port-grid"></div>
-        <div class="empty-state" id="empty-state" style="display:none">
-          <div class="empty-icon">🌱</div>
-          <p>아직 등록된 프로젝트가 없습니다.<br/>위의 '프로젝트 추가' 버튼으로 첫 번째 프로젝트를 등록해 보세요!</p>
+        <div id="port-list-wrap">
+          <div class="loading"><div class="spinner"></div> 불러오는 중...</div>
         </div>
       </div>
 
-      <!-- ───── SETTINGS PAGE ───── -->
+      <!-- EDITOR (블로그형) -->
+      <div class="page" id="page-editor">
+        <div class="page-header">
+          <div><h1 id="editor-page-title">프로젝트 추가</h1><p>사진과 글을 자유롭게 구성하세요</p></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn-secondary" onclick="showPage('portfolio',document.getElementById('nav-port'))">← 목록</button>
+            <button class="btn-add" onclick="saveProject()">💾 저장하고 반영</button>
+          </div>
+        </div>
+
+        <!-- 기본 정보 -->
+        <div style="background:white;border-radius:8px;padding:28px 32px;margin-bottom:20px;">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">프로젝트명 *</label>
+              <input class="form-input" id="e-title" placeholder="예: 강남 주거 단지 정원"/>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">카테고리 *</label>
+              <select class="form-select" id="e-cat">
+                <option value="">선택</option>
+                <option>주거 조경</option><option>상업 조경</option><option>공공 조경</option>
+                <option>수경 시설</option><option>전통 정원</option><option>기타</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:16px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">시공 연도 *</label>
+              <input class="form-input" id="e-year" type="number" placeholder="2024"/>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">위치</label>
+              <input class="form-input" id="e-location" placeholder="예: 서울 강남구"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- 대표 이미지 -->
+        <div style="background:white;border-radius:8px;padding:28px 32px;margin-bottom:20px;">
+          <div class="settings-card-title" style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #f0ede6;font-size:1rem;font-weight:600;color:var(--forest)">대표 이미지 (썸네일)</div>
+          <div id="cover-upload-area" class="cover-upload" onclick="document.getElementById('cover-file').click()">
+            <div style="font-size:2rem;margin-bottom:8px;opacity:0.4">🖼️</div>
+            <div style="font-size:0.85rem;color:var(--stone)">클릭하거나 이미지를 드래그하세요</div>
+            <div style="font-size:0.75rem;color:#b0aa9f;margin-top:4px">JPG, PNG · 최대 5MB</div>
+          </div>
+          <div id="cover-preview-wrap" style="display:none">
+            <div class="cover-preview">
+              <img id="cover-preview-img" src="" alt=""/>
+              <button class="cover-remove" onclick="removeCover()">✕</button>
+            </div>
+          </div>
+          <input type="file" id="cover-file" accept="image/*" style="display:none" onchange="handleCoverFile(this)"/>
+          <div style="display:flex;align-items:center;gap:12px;margin:12px 0;color:var(--stone);font-size:0.75rem"><div style="flex:1;height:1px;background:#e0dbd2"></div>또는 URL<div style="flex:1;height:1px;background:#e0dbd2"></div></div>
+          <input class="form-input" id="cover-url" placeholder="https://..." oninput="handleCoverUrl(this)"/>
+        </div>
+
+        <!-- 본문 에디터 -->
+        <div style="background:white;border-radius:8px;overflow:hidden;margin-bottom:20px;">
+          <div style="padding:16px 20px;border-bottom:1px solid #f0ede6;font-size:1rem;font-weight:600;color:var(--forest)">본문 내용</div>
+          <div class="editor-toolbar">
+            <button class="editor-tool-btn" onclick="fmt('bold')"><b>B</b></button>
+            <button class="editor-tool-btn" onclick="fmt('italic')"><i>I</i></button>
+            <div class="editor-tool-sep"></div>
+            <button class="editor-tool-btn" onclick="insertHeading(2)">H2</button>
+            <button class="editor-tool-btn" onclick="insertHeading(3)">H3</button>
+            <div class="editor-tool-sep"></div>
+            <button class="editor-tool-btn" onclick="fmt('insertUnorderedList')">• 목록</button>
+            <div class="editor-tool-sep"></div>
+            <button class="editor-tool-btn" onclick="insertImage()">🖼️ 사진 삽입</button>
+            <input type="file" id="body-img-file" accept="image/*" style="display:none" onchange="handleBodyImage(this)"/>
+          </div>
+          <div class="editor-content" id="editor-content" contenteditable="true"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
       <div class="page" id="page-settings">
         <div class="page-header">
           <div><h1>텍스트 & 정보 수정</h1><p>저장하면 메인 사이트에 즉시 반영됩니다</p></div>
         </div>
-
-        <!-- TABS -->
         <div class="settings-tabs">
           <div class="stab active" onclick="showStab('hero',this)">히어로</div>
           <div class="stab" onclick="showStab('about',this)">회사 소개</div>
@@ -244,153 +317,63 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
           <div class="stab" onclick="showStab('contact',this)">연락처</div>
         </div>
 
-        <!-- HERO -->
         <div class="settings-panel active" id="stab-hero">
           <div class="settings-card">
             <div class="settings-card-title">히어로 섹션</div>
-            <div class="form-group">
-              <label class="form-label">소제목 (작은 위 텍스트)</label>
-              <input class="form-input" id="s-hero-eyebrow" placeholder="자연을 담은 공간 — Since 2009"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">메인 제목 첫줄 (가는 텍스트)</label>
-              <input class="form-input" id="s-hero-thin" placeholder="땅과 하늘 사이,"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">메인 제목 (굵은 텍스트)</label>
-              <textarea class="form-textarea" id="s-hero-title" style="min-height:60px" placeholder="살아있는&#10;정원을&#10;짓습니다"></textarea>
-              <div class="form-hint">줄바꿈은 Enter로 입력하세요</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">부제목 설명</label>
-              <textarea class="form-textarea" id="s-hero-sub" placeholder="금석 조경은 자연의 숨결을 담아..."></textarea>
-            </div>
+            <div class="form-group"><label class="form-label">소제목</label><input class="form-input" id="s-hero-eyebrow"/></div>
+            <div class="form-group"><label class="form-label">메인 제목 첫줄 (얇은 텍스트)</label><input class="form-input" id="s-hero-thin"/></div>
+            <div class="form-group"><label class="form-label">메인 제목 (굵은 텍스트)</label><textarea class="form-textarea" id="s-hero-title" style="min-height:60px"></textarea><div class="form-hint">줄바꿈은 Enter</div></div>
+            <div class="form-group"><label class="form-label">부제목 설명</label><textarea class="form-textarea" id="s-hero-sub"></textarea></div>
           </div>
         </div>
 
-        <!-- ABOUT -->
         <div class="settings-panel" id="stab-about">
           <div class="settings-card">
             <div class="settings-card-title">회사 소개 문구</div>
-            <div class="form-group">
-              <label class="form-label">소제목</label>
-              <input class="form-input" id="s-about-eyebrow" placeholder="금석조경 소개"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">메인 제목</label>
-              <textarea class="form-textarea" id="s-about-title" style="min-height:60px" placeholder="자연과 사람이&#10;공존하는 공간"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">본문</label>
-              <textarea class="form-textarea" id="s-about-body" placeholder="금석 조경은 2009년 창업 이래..."></textarea>
-            </div>
+            <div class="form-group"><label class="form-label">소제목</label><input class="form-input" id="s-about-eyebrow"/></div>
+            <div class="form-group"><label class="form-label">메인 제목</label><textarea class="form-textarea" id="s-about-title" style="min-height:60px"></textarea></div>
+            <div class="form-group"><label class="form-label">본문</label><textarea class="form-textarea" id="s-about-body"></textarea></div>
           </div>
           <div class="settings-card">
             <div class="settings-card-title">통계 숫자</div>
             <div class="stats-editor">
-              <div class="stat-edit-card">
-                <div class="form-group" style="margin-bottom:10px">
-                  <label class="form-label">숫자</label>
-                  <input class="form-input" id="s-stat1-n" placeholder="500+"/>
-                </div>
-                <div class="form-group" style="margin-bottom:0">
-                  <label class="form-label">라벨</label>
-                  <input class="form-input" id="s-stat1-l" placeholder="완료 프로젝트"/>
-                </div>
-              </div>
-              <div class="stat-edit-card">
-                <div class="form-group" style="margin-bottom:10px">
-                  <label class="form-label">숫자</label>
-                  <input class="form-input" id="s-stat2-n" placeholder="15년"/>
-                </div>
-                <div class="form-group" style="margin-bottom:0">
-                  <label class="form-label">라벨</label>
-                  <input class="form-input" id="s-stat2-l" placeholder="전문 경력"/>
-                </div>
-              </div>
-              <div class="stat-edit-card">
-                <div class="form-group" style="margin-bottom:10px">
-                  <label class="form-label">숫자</label>
-                  <input class="form-input" id="s-stat3-n" placeholder="98%"/>
-                </div>
-                <div class="form-group" style="margin-bottom:0">
-                  <label class="form-label">라벨</label>
-                  <input class="form-input" id="s-stat3-l" placeholder="고객 만족도"/>
-                </div>
-              </div>
+              <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat1-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat1-l"/></div></div>
+              <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat2-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat2-l"/></div></div>
+              <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat3-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat3-l"/></div></div>
             </div>
           </div>
         </div>
 
-        <!-- SERVICES -->
         <div class="settings-panel" id="stab-services">
           <div class="settings-card">
             <div class="settings-card-title">서비스 항목 (6개)</div>
-            <div class="svc-editor-list" id="svc-editor-list">
-              <!-- rendered by JS -->
-            </div>
+            <div class="svc-editor-list" id="svc-editor-list"></div>
           </div>
         </div>
 
-        <!-- PHILOSOPHY -->
         <div class="settings-panel" id="stab-philosophy">
           <div class="settings-card">
             <div class="settings-card-title">철학 섹션</div>
-            <div class="form-group">
-              <label class="form-label">메인 제목</label>
-              <textarea class="form-textarea" id="s-philo-title" style="min-height:60px" placeholder="자연은&#10;설계되지 않는다"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">인용구 (blockquote)</label>
-              <textarea class="form-textarea" id="s-philo-quote" placeholder='"가장 좋은 정원은&#10;정원처럼 보이지 않는 정원"'></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">본문</label>
-              <textarea class="form-textarea" id="s-philo-body" placeholder="금석 조경은 인공적인 아름다움이 아닌..."></textarea>
-            </div>
+            <div class="form-group"><label class="form-label">메인 제목</label><textarea class="form-textarea" id="s-philo-title" style="min-height:60px"></textarea></div>
+            <div class="form-group"><label class="form-label">인용구</label><textarea class="form-textarea" id="s-philo-quote"></textarea></div>
+            <div class="form-group"><label class="form-label">본문</label><textarea class="form-textarea" id="s-philo-body"></textarea></div>
             <div class="settings-card-title" style="margin-top:20px">핵심 가치 (4개)</div>
-            <div id="values-editor" style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
-              <input class="form-input" id="s-val1" placeholder="자연과의 조화를 최우선으로"/>
-              <input class="form-input" id="s-val2" placeholder="지속 가능한 소재와 공법 사용"/>
-              <input class="form-input" id="s-val3" placeholder="사계절 살아있는 공간 구성"/>
-              <input class="form-input" id="s-val4" placeholder="고객과의 깊은 소통과 신뢰"/>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+              <input class="form-input" id="s-val1"/><input class="form-input" id="s-val2"/>
+              <input class="form-input" id="s-val3"/><input class="form-input" id="s-val4"/>
             </div>
           </div>
         </div>
 
-        <!-- CONTACT -->
         <div class="settings-panel" id="stab-contact">
           <div class="settings-card">
             <div class="settings-card-title">연락처 정보</div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">이메일</label>
-                <input class="form-input" id="s-email" placeholder="info@geumseok.co.kr"/>
-              </div>
-              <div class="form-group">
-                <label class="form-label">전화번호</label>
-                <input class="form-input" id="s-phone" placeholder="02-0000-0000"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">주소</label>
-              <input class="form-input" id="s-address" placeholder="서울시 강남구 ..."/>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">운영 시간</label>
-                <input class="form-input" id="s-hours" placeholder="평일 09:00 – 18:00"/>
-              </div>
-              <div class="form-group">
-                <label class="form-label">문의 폼 수신 이메일</label>
-                <input class="form-input" id="s-mailto" placeholder="contact@geumseok.co.kr"/>
-                <div class="form-hint">문의 폼 '보내기' 시 이 주소로 연결됩니다</div>
-              </div>
-            </div>
+            <div class="form-row"><div class="form-group"><label class="form-label">이메일</label><input class="form-input" id="s-email"/></div><div class="form-group"><label class="form-label">전화번호</label><input class="form-input" id="s-phone"/></div></div>
+            <div class="form-group"><label class="form-label">주소</label><input class="form-input" id="s-address"/></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">운영 시간</label><input class="form-input" id="s-hours"/></div><div class="form-group"><label class="form-label">문의 수신 이메일</label><input class="form-input" id="s-mailto"/></div></div>
           </div>
         </div>
 
-        <!-- SAVE BAR -->
         <div class="save-bar">
           <span class="save-hint" id="save-hint"></span>
           <button class="btn-secondary" onclick="loadSettings()">초기화</button>
@@ -398,77 +381,254 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0ede6;color:var(--ink);m
         </div>
       </div>
 
-    </div><!-- /content -->
-  </div><!-- /main -->
-</div><!-- /app -->
-
-<!-- PORTFOLIO MODAL -->
-<div class="modal-backdrop" id="modal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="modal-title">프로젝트 추가</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">프로젝트명 *</label>
-        <input class="form-input" id="f-title" placeholder="예: 강남 주거 단지 정원"/>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">카테고리 *</label>
-          <select class="form-select" id="f-cat">
-            <option value="">선택</option>
-            <option>주거 조경</option><option>상업 조경</option><option>공공 조경</option>
-            <option>수경 시설</option><option>전통 정원</option><option>기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">시공 연도 *</label>
-          <input class="form-input" id="f-year" type="number" placeholder="2024" min="2000" max="2030"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">프로젝트 설명</label>
-        <textarea class="form-textarea" id="f-desc" placeholder="프로젝트 내용, 규모, 특징 등을 입력하세요."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">대표 이미지</label>
-        <div id="img-upload-area" class="img-upload-area" onclick="document.getElementById('f-file').click()"
-             ondragover="handleDrag(event,true)" ondragleave="handleDrag(event,false)" ondrop="handleDrop(event)">
-          <div class="img-upload-icon">📷</div>
-          <div class="img-upload-text">클릭하거나 이미지를 드래그하세요</div>
-          <div class="img-upload-sub">JPG, PNG, WEBP · 최대 5MB</div>
-        </div>
-        <div id="img-preview-wrap" style="display:none">
-          <div class="img-preview">
-            <img id="img-preview" src="" alt="미리보기"/>
-            <button class="img-preview-remove" onclick="removeImage(event)">✕</button>
-          </div>
-        </div>
-        <input type="file" id="f-file" accept="image/*" style="display:none" onchange="handleFile(this)"/>
-        <div class="img-divider">또는 URL 직접 입력</div>
-        <input class="form-input" id="f-url" placeholder="https://..." oninput="handleUrlInput(this)"/>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeModal()">취소</button>
-      <button class="btn-primary" onclick="saveProject()">저장하기</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<script>
-// ── CONSTANTS ──────────────────────────────────────
-const ADMIN_ID='admin', ADMIN_PW='1234';
-const STORE_PORT='gs_portfolio', STORE_SITE='gs_site';
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
 
-const SVC_ICONS=['🌱','🏡','🏢','🪨','💧','✂️'];
-const DEFAULTS={
+const firebaseConfig = {
+  apiKey: "AIzaSyDD6CVdV3JfzjdOtyusbD1I7yCpZ59_Cpw",
+  authDomain: "gsstone.firebaseapp.com",
+  projectId: "gsstone",
+  storageBucket: "gsstone.firebasestorage.app",
+  messagingSenderId: "125014531671",
+  appId: "1:125014531671:web:5cd9324391874e07820d12"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+window._db = db;
+window._storage = storage;
+window._fsLib = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, ref, uploadBytes, getDownloadURL };
+
+// AUTH
+const ADMIN_ID = 'admin', ADMIN_PW = '1234';
+
+window.doLogin = function() {
+  const id = document.getElementById('l-id').value.trim();
+  const pw = document.getElementById('l-pw').value;
+  if (id === ADMIN_ID && pw === ADMIN_PW) {
+    sessionStorage.setItem('gs_admin', '1');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    init();
+  } else {
+    document.getElementById('l-err').textContent = '아이디 또는 비밀번호가 올바르지 않습니다.';
+  }
+};
+document.getElementById('l-pw').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+document.getElementById('l-id').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('l-pw').focus(); });
+
+window.doLogout = function() {
+  sessionStorage.removeItem('gs_admin');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('l-id').value=''; document.getElementById('l-pw').value=''; document.getElementById('l-err').textContent='';
+};
+if (sessionStorage.getItem('gs_admin')) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app').classList.add('visible'); }
+
+// PORTFOLIO
+let projects = [];
+let editingId = null;
+let coverData = null;
+
+async function loadProjects() {
+  const { collection, getDocs, orderBy, query } = window._fsLib;
+  const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+  const snap = await getDocs(q);
+  projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderPortfolioList();
+  renderStats();
+}
+
+function renderStats() {
+  const yr = new Date().getFullYear();
+  document.getElementById('stat-total').textContent = projects.length;
+  document.getElementById('stat-year').textContent = projects.filter(p => String(p.year) === String(yr)).length;
+  document.getElementById('stat-cats').textContent = new Set(projects.map(p => p.category)).size;
+}
+
+function renderPortfolioList() {
+  const wrap = document.getElementById('port-list-wrap');
+  if (!projects.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">🌱</div><p>아직 등록된 프로젝트가 없습니다.<br/>위의 \'프로젝트 추가\' 버튼으로 시작하세요!</p></div>';
+    return;
+  }
+  wrap.innerHTML = `<div class="port-list">${projects.map(p => `
+    <div class="port-row">
+      <div class="port-row-thumb">
+        ${p.coverUrl ? `<img src="${p.coverUrl}" alt="${p.title}"/>` : `<div class="port-row-thumb-ph">🌿</div>`}
+      </div>
+      <div class="port-row-info">
+        <div class="port-row-title">${p.title}</div>
+        <div class="port-row-meta">${p.category} · ${p.year}년${p.location ? ' · '+p.location : ''}</div>
+      </div>
+      <div class="port-row-actions">
+        <button class="btn-edit" onclick="openEditor('${p.id}')">수정</button>
+        <button class="btn-del" onclick="deleteProject('${p.id}','${p.title}')">삭제</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+window.openEditor = function(id = null) {
+  editingId = id;
+  coverData = null;
+  document.getElementById('e-title').value = '';
+  document.getElementById('e-cat').value = '';
+  document.getElementById('e-year').value = '';
+  document.getElementById('e-location').value = '';
+  document.getElementById('editor-content').innerHTML = '';
+  document.getElementById('cover-url').value = '';
+  removeCoverUI();
+
+  if (id) {
+    const p = projects.find(x => x.id === id);
+    if (p) {
+      document.getElementById('e-title').value = p.title || '';
+      document.getElementById('e-cat').value = p.category || '';
+      document.getElementById('e-year').value = p.year || '';
+      document.getElementById('e-location').value = p.location || '';
+      document.getElementById('editor-content').innerHTML = p.body || '';
+      if (p.coverUrl) { showCoverPreview(p.coverUrl); }
+    }
+    document.getElementById('editor-page-title').textContent = '프로젝트 수정';
+  } else {
+    document.getElementById('editor-page-title').textContent = '프로젝트 추가';
+  }
+  showPage('editor', null);
+  document.getElementById('topbar-title').textContent = id ? '프로젝트 수정' : '프로젝트 추가';
+};
+
+window.saveProject = async function() {
+  const title = document.getElementById('e-title').value.trim();
+  const cat = document.getElementById('e-cat').value;
+  const year = document.getElementById('e-year').value;
+  if (!title) { showToast('프로젝트명을 입력해 주세요.', true); return; }
+  if (!cat) { showToast('카테고리를 선택해 주세요.', true); return; }
+  if (!year) { showToast('시공 연도를 입력해 주세요.', true); return; }
+
+  showToast('저장 중...');
+
+  let coverUrl = document.getElementById('cover-url').value.trim();
+
+  // Upload cover image if file selected
+  if (coverData) {
+    try {
+      const { ref, uploadBytes, getDownloadURL } = window._fsLib;
+      const storageRef = ref(storage, `covers/${Date.now()}_${coverData.name}`);
+      const snap = await uploadBytes(storageRef, coverData);
+      coverUrl = await getDownloadURL(snap.ref);
+    } catch(e) {
+      showToast('이미지 업로드 실패: ' + e.message, true);
+      return;
+    }
+  } else if (editingId) {
+    const p = projects.find(x => x.id === editingId);
+    if (p && p.coverUrl && !coverUrl) coverUrl = p.coverUrl;
+  }
+
+  const data = {
+    title,
+    category: cat,
+    year: parseInt(year),
+    location: document.getElementById('e-location').value.trim(),
+    body: document.getElementById('editor-content').innerHTML,
+    coverUrl,
+    updatedAt: Date.now()
+  };
+
+  try {
+    const { collection, addDoc, updateDoc, doc } = window._fsLib;
+    if (editingId) {
+      await updateDoc(doc(db, 'projects', editingId), data);
+      showToast('수정되었습니다! 메인 사이트에 반영됩니다 🌿');
+    } else {
+      data.createdAt = Date.now();
+      await addDoc(collection(db, 'projects'), data);
+      showToast('등록되었습니다! 메인 사이트에 반영됩니다 🌿');
+    }
+    await loadProjects();
+    showPage('portfolio', document.querySelector('.sb-item'));
+    document.getElementById('topbar-title').textContent = '포트폴리오 관리';
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, true);
+  }
+};
+
+window.deleteProject = async function(id, title) {
+  if (!confirm(`"${title}" 프로젝트를 삭제하시겠습니까?`)) return;
+  const { deleteDoc, doc } = window._fsLib;
+  await deleteDoc(doc(db, 'projects', id));
+  showToast('삭제되었습니다.');
+  await loadProjects();
+};
+
+// COVER IMAGE
+window.handleCoverFile = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5*1024*1024) { showToast('5MB 이하 이미지만 가능합니다.', true); return; }
+  coverData = file;
+  const url = URL.createObjectURL(file);
+  showCoverPreview(url);
+  document.getElementById('cover-url').value = '';
+};
+window.handleCoverUrl = function(input) {
+  const url = input.value.trim();
+  if (url) { coverData = null; showCoverPreview(url); }
+  else removeCoverUI();
+};
+function showCoverPreview(src) {
+  document.getElementById('cover-upload-area').style.display = 'none';
+  document.getElementById('cover-preview-wrap').style.display = 'block';
+  document.getElementById('cover-preview-img').src = src;
+}
+function removeCoverUI() {
+  document.getElementById('cover-upload-area').style.display = 'block';
+  document.getElementById('cover-preview-wrap').style.display = 'none';
+  document.getElementById('cover-preview-img').src = '';
+}
+window.removeCover = function() { coverData = null; removeCoverUI(); document.getElementById('cover-url').value = ''; document.getElementById('cover-file').value = ''; };
+
+// BODY IMAGE INSERT
+window.insertImage = function() { document.getElementById('body-img-file').click(); };
+window.handleBodyImage = async function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  showToast('이미지 업로드 중...');
+  try {
+    const { ref, uploadBytes, getDownloadURL } = window._fsLib;
+    const storageRef = ref(storage, `body/${Date.now()}_${file.name}`);
+    const snap = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(snap.ref);
+    document.getElementById('editor-content').focus();
+    document.execCommand('insertImage', false, url);
+    showToast('이미지 삽입 완료!');
+  } catch(e) {
+    showToast('업로드 실패: ' + e.message, true);
+  }
+};
+
+// EDITOR FORMAT
+window.fmt = function(cmd) { document.getElementById('editor-content').focus(); document.execCommand(cmd, false, null); };
+window.insertHeading = function(level) {
+  document.getElementById('editor-content').focus();
+  document.execCommand('formatBlock', false, `h${level}`);
+};
+
+// SETTINGS
+const DEFAULTS = {
   hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.'},
-  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다. 단순한 시공이 아닌, 공간에 이야기를 담고 계절마다 달리 빛나는 살아있는 환경을 만들어 드립니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도'},
+  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도'},
   services:[
     {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
     {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
@@ -477,259 +637,132 @@ const DEFAULTS={
     {icon:'💧',name:'수경 시설 조성',desc:'폭포, 연못, 분수로 시각적·청각적 편안함을 동시에 드립니다.'},
     {icon:'✂️',name:'유지 관리',desc:'완공 후에도 아름다움이 지속되도록 정기적인 관리 서비스를 제공합니다.'},
   ],
-  philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다. 모든 식물에는 이야기가 있고, 모든 돌에는 시간이 깃들어 있습니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰'},
+  philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰'},
   contact:{email:'',phone:'',address:'',hours:'평일 09:00 – 18:00',mailto:''}
 };
 
-// ── AUTH ───────────────────────────────────────────
-function doLogin(){
-  const id=document.getElementById('l-id').value.trim();
-  const pw=document.getElementById('l-pw').value;
-  if(id===ADMIN_ID&&pw===ADMIN_PW){
-    sessionStorage.setItem('gs_admin','1');
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app').classList.add('visible');
-    init();
-  } else {
-    document.getElementById('l-err').textContent='아이디 또는 비밀번호가 올바르지 않습니다.';
+async function loadSettingsFromFirebase() {
+  try {
+    const { collection, getDocs } = window._fsLib;
+    const snap = await getDocs(collection(db, 'settings'));
+    let saved = {};
+    snap.docs.forEach(d => { saved[d.id] = d.data(); });
+    const d = deepMerge(JSON.parse(JSON.stringify(DEFAULTS)), saved);
+    applySettingsToForm(d);
+  } catch(e) {
+    applySettingsToForm(DEFAULTS);
   }
 }
-document.getElementById('l-pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('l-id').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('l-pw').focus();});
-function doLogout(){
-  sessionStorage.removeItem('gs_admin');
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('app').classList.remove('visible');
-  document.getElementById('l-id').value='';document.getElementById('l-pw').value='';document.getElementById('l-err').textContent='';
-}
-if(sessionStorage.getItem('gs_admin')){document.getElementById('login-screen').classList.add('hidden');document.getElementById('app').classList.add('visible');}
 
-// ── DATA ───────────────────────────────────────────
-function getProjects(){try{return JSON.parse(localStorage.getItem(STORE_PORT))||[];}catch{return[];}}
-function saveProjects(a){localStorage.setItem(STORE_PORT,JSON.stringify(a));}
-function getSite(){
-  try{
-    const saved=JSON.parse(localStorage.getItem(STORE_SITE))||{};
-    return deepMerge(JSON.parse(JSON.stringify(DEFAULTS)),saved);
-  }catch{return JSON.parse(JSON.stringify(DEFAULTS));}
-}
-function saveSite(d){localStorage.setItem(STORE_SITE,JSON.stringify(d));}
-function deepMerge(target,source){
-  for(const k in source){
-    if(source[k]&&typeof source[k]==='object'&&!Array.isArray(source[k])){
-      target[k]=target[k]||{};deepMerge(target[k],source[k]);
-    } else {target[k]=source[k];}
-  }
-  return target;
+window.loadSettings = loadSettingsFromFirebase;
+
+function applySettingsToForm(d) {
+  const sv = (id, val) => { const el = document.getElementById(id); if(el && val !== undefined) el.value = val; };
+  sv('s-hero-eyebrow', d.hero?.eyebrow); sv('s-hero-thin', d.hero?.thin);
+  sv('s-hero-title', d.hero?.title); sv('s-hero-sub', d.hero?.sub);
+  sv('s-about-eyebrow', d.about?.eyebrow); sv('s-about-title', d.about?.title);
+  sv('s-about-body', d.about?.body);
+  sv('s-stat1-n', d.about?.stat1n); sv('s-stat1-l', d.about?.stat1l);
+  sv('s-stat2-n', d.about?.stat2n); sv('s-stat2-l', d.about?.stat2l);
+  sv('s-stat3-n', d.about?.stat3n); sv('s-stat3-l', d.about?.stat3l);
+  renderSvcEditor(d.services || DEFAULTS.services);
+  sv('s-philo-title', d.philosophy?.title); sv('s-philo-quote', d.philosophy?.quote);
+  sv('s-philo-body', d.philosophy?.body);
+  sv('s-val1', d.philosophy?.val1); sv('s-val2', d.philosophy?.val2);
+  sv('s-val3', d.philosophy?.val3); sv('s-val4', d.philosophy?.val4);
+  sv('s-email', d.contact?.email); sv('s-phone', d.contact?.phone);
+  sv('s-address', d.contact?.address); sv('s-hours', d.contact?.hours);
+  sv('s-mailto', d.contact?.mailto);
 }
 
-// ── PAGE NAV ───────────────────────────────────────
-function showPage(name,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  el.classList.add('active');
-  const titles={portfolio:'포트폴리오 관리',settings:'텍스트 & 정보 수정'};
-  document.getElementById('topbar-title').textContent=titles[name]||'';
-}
-
-// ── SETTINGS TABS ──────────────────────────────────
-function showStab(name,el){
-  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.settings-panel').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('stab-'+name).classList.add('active');
-}
-
-// ── SETTINGS: LOAD ─────────────────────────────────
-function loadSettings(){
-  const d=getSite();
-  // Hero
-  document.getElementById('s-hero-eyebrow').value=d.hero.eyebrow||'';
-  document.getElementById('s-hero-thin').value=d.hero.thin||'';
-  document.getElementById('s-hero-title').value=d.hero.title||'';
-  document.getElementById('s-hero-sub').value=d.hero.sub||'';
-  // About
-  document.getElementById('s-about-eyebrow').value=d.about.eyebrow||'';
-  document.getElementById('s-about-title').value=d.about.title||'';
-  document.getElementById('s-about-body').value=d.about.body||'';
-  document.getElementById('s-stat1-n').value=d.about.stat1n||'';
-  document.getElementById('s-stat1-l').value=d.about.stat1l||'';
-  document.getElementById('s-stat2-n').value=d.about.stat2n||'';
-  document.getElementById('s-stat2-l').value=d.about.stat2l||'';
-  document.getElementById('s-stat3-n').value=d.about.stat3n||'';
-  document.getElementById('s-stat3-l').value=d.about.stat3l||'';
-  // Services
-  renderSvcEditor(d.services);
-  // Philosophy
-  document.getElementById('s-philo-title').value=d.philosophy.title||'';
-  document.getElementById('s-philo-quote').value=d.philosophy.quote||'';
-  document.getElementById('s-philo-body').value=d.philosophy.body||'';
-  document.getElementById('s-val1').value=d.philosophy.val1||'';
-  document.getElementById('s-val2').value=d.philosophy.val2||'';
-  document.getElementById('s-val3').value=d.philosophy.val3||'';
-  document.getElementById('s-val4').value=d.philosophy.val4||'';
-  // Contact
-  document.getElementById('s-email').value=d.contact.email||'';
-  document.getElementById('s-phone').value=d.contact.phone||'';
-  document.getElementById('s-address').value=d.contact.address||'';
-  document.getElementById('s-hours').value=d.contact.hours||'';
-  document.getElementById('s-mailto').value=d.contact.mailto||'';
-}
-
-function renderSvcEditor(svcs){
-  const list=document.getElementById('svc-editor-list');
-  list.innerHTML=svcs.map((s,i)=>`
+function renderSvcEditor(svcs) {
+  const icons = ['🌱','🏡','🏢','🪨','💧','✂️','🌳','🌿','🏗️','💡','🌸','🍃'];
+  document.getElementById('svc-editor-list').innerHTML = svcs.map((s,i) => `
     <div class="svc-editor-item">
       <div class="svc-editor-item-head">
         <span class="svc-editor-num">0${i+1}</span>
-        <select class="svc-editor-icon-sel" id="s-svc${i}-icon">
-          ${['🌱','🏡','🏢','🪨','💧','✂️','🌳','🌿','🏗️','💡','🌸','🍃'].map(ic=>`<option value="${ic}" ${ic===s.icon?'selected':''}>${ic}</option>`).join('')}
-        </select>
+        <select id="s-svc${i}-icon">${icons.map(ic=>`<option value="${ic}"${ic===s.icon?' selected':''}>${ic}</option>`).join('')}</select>
       </div>
       <div class="svc-editor-fields">
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">서비스명</label>
-          <input class="form-input" id="s-svc${i}-name" value="${s.name||''}"/>
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">설명</label>
-          <input class="form-input" id="s-svc${i}-desc" value="${s.desc||''}"/>
-        </div>
+        <div><label class="form-label">서비스명</label><input class="form-input" id="s-svc${i}-name" value="${s.name||''}"/></div>
+        <div><label class="form-label">설명</label><input class="form-input" id="s-svc${i}-desc" value="${s.desc||''}"/></div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-// ── SETTINGS: SAVE ─────────────────────────────────
-function saveSettings(){
-  const services=Array.from({length:6},(_,i)=>({
-    icon:document.getElementById(`s-svc${i}-icon`)?.value||SVC_ICONS[i],
-    name:document.getElementById(`s-svc${i}-name`)?.value||'',
-    desc:document.getElementById(`s-svc${i}-desc`)?.value||'',
+window.saveSettings = async function() {
+  const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const services = Array.from({length:6}, (_,i) => ({
+    icon: document.getElementById(`s-svc${i}-icon`)?.value || '',
+    name: document.getElementById(`s-svc${i}-name`)?.value || '',
+    desc: document.getElementById(`s-svc${i}-desc`)?.value || '',
   }));
-  const data={
-    hero:{eyebrow:v('s-hero-eyebrow'),thin:v('s-hero-thin'),title:v('s-hero-title'),sub:v('s-hero-sub')},
-    about:{eyebrow:v('s-about-eyebrow'),title:v('s-about-title'),body:v('s-about-body'),stat1n:v('s-stat1-n'),stat1l:v('s-stat1-l'),stat2n:v('s-stat2-n'),stat2l:v('s-stat2-l'),stat3n:v('s-stat3-n'),stat3l:v('s-stat3-l')},
-    services,
-    philosophy:{title:v('s-philo-title'),quote:v('s-philo-quote'),body:v('s-philo-body'),val1:v('s-val1'),val2:v('s-val2'),val3:v('s-val3'),val4:v('s-val4')},
-    contact:{email:v('s-email'),phone:v('s-phone'),address:v('s-address'),hours:v('s-hours'),mailto:v('s-mailto')},
+  const data = {
+    hero: {eyebrow:v('s-hero-eyebrow'),thin:v('s-hero-thin'),title:v('s-hero-title'),sub:v('s-hero-sub')},
+    about: {eyebrow:v('s-about-eyebrow'),title:v('s-about-title'),body:v('s-about-body'),stat1n:v('s-stat1-n'),stat1l:v('s-stat1-l'),stat2n:v('s-stat2-n'),stat2l:v('s-stat2-l'),stat3n:v('s-stat3-n'),stat3l:v('s-stat3-l')},
+    philosophy: {title:v('s-philo-title'),quote:v('s-philo-quote'),body:v('s-philo-body'),val1:v('s-val1'),val2:v('s-val2'),val3:v('s-val3'),val4:v('s-val4')},
+    contact: {email:v('s-email'),phone:v('s-phone'),address:v('s-address'),hours:v('s-hours'),mailto:v('s-mailto')},
   };
-  saveSite(data);
-  showToast('저장 완료! 메인 사이트에 반영되었습니다 🌿');
-  document.getElementById('save-hint').textContent='마지막 저장: '+new Date().toLocaleTimeString('ko-KR');
-}
-function v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
-
-// ── PORTFOLIO ──────────────────────────────────────
-function renderPortfolioPage(){
-  const projects=getProjects();
-  const grid=document.getElementById('port-grid');
-  const empty=document.getElementById('empty-state');
-  const yr=new Date().getFullYear();
-  document.getElementById('stat-total').textContent=projects.length;
-  document.getElementById('stat-year').textContent=projects.filter(p=>String(p.year)===String(yr)).length;
-  document.getElementById('stat-cats').textContent=new Set(projects.map(p=>p.category)).size;
-  if(!projects.length){grid.innerHTML='';empty.style.display='block';return;}
-  empty.style.display='none';
-  grid.innerHTML=projects.map(p=>`
-    <div class="port-card">
-      <div class="port-card-img">
-        ${p.img?`<img src="${p.img}" alt="${p.title}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><div class="port-card-img-ph" style="display:none">🌿</div>`:`<div class="port-card-img-ph">🌿</div>`}
-      </div>
-      <div class="port-card-body">
-        <div class="port-card-cat">${p.category}</div>
-        <div class="port-card-title">${p.title}</div>
-        <div class="port-card-year">${p.year}년</div>
-      </div>
-      <div class="port-card-actions">
-        <button class="btn-edit" onclick="openModal(${p.id})">수정</button>
-        <button class="btn-del" onclick="deleteProject(${p.id})">삭제</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ── MODAL ──────────────────────────────────────────
-let editId=null,imgData=null;
-function openModal(id=null){
-  editId=id;
-  document.getElementById('modal-title').textContent=id?'프로젝트 수정':'프로젝트 추가';
-  clearForm();
-  if(id!==null){
-    const p=getProjects().find(x=>x.id===id);
-    if(p){
-      document.getElementById('f-title').value=p.title||'';
-      document.getElementById('f-cat').value=p.category||'';
-      document.getElementById('f-year').value=p.year||'';
-      document.getElementById('f-desc').value=p.desc||'';
-      if(p.img){document.getElementById('f-url').value=p.img;showPreview(p.img);}
+  try {
+    const { doc, updateDoc, collection, addDoc, getDocs } = window._fsLib;
+    for (const [key, val] of Object.entries(data)) {
+      try { await updateDoc(doc(db, 'settings', key), val); }
+      catch { await addDoc(collection(db, 'settings'), { ...val, _id: key }); }
     }
+    // services 별도 저장
+    try { await updateDoc(doc(db, 'settings', 'services'), { items: services }); }
+    catch { await addDoc(collection(db, 'settings'), { items: services, _id: 'services' }); }
+    showToast('저장 완료! 메인 사이트에 반영되었습니다 🌿');
+    document.getElementById('save-hint').textContent = '마지막 저장: ' + new Date().toLocaleTimeString('ko-KR');
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, true);
   }
-  document.getElementById('modal').classList.add('open');
-}
-function closeModal(){document.getElementById('modal').classList.remove('open');clearForm();editId=null;}
-function clearForm(){
-  ['f-title','f-cat','f-year','f-desc','f-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  removeImageState();
-}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+};
 
-function handleFile(input){
-  const file=input.files[0];if(!file)return;
-  if(file.size>5*1024*1024){showToast('이미지 용량이 5MB를 초과합니다.',true);return;}
-  const reader=new FileReader();
-  reader.onload=e=>{imgData=e.target.result;showPreview(imgData);document.getElementById('f-url').value='';};
-  reader.readAsDataURL(file);
-}
-function handleDrag(e,over){e.preventDefault();document.getElementById('img-upload-area').classList.toggle('dragover',over);}
-function handleDrop(e){
-  e.preventDefault();document.getElementById('img-upload-area').classList.remove('dragover');
-  const file=e.dataTransfer.files[0];
-  if(file&&file.type.startsWith('image/')){handleFile({files:[file]});}
-}
-function handleUrlInput(input){const url=input.value.trim();if(url){imgData=null;showPreview(url);}else{removeImageState();}}
-function showPreview(src){document.getElementById('img-upload-area').style.display='none';document.getElementById('img-preview-wrap').style.display='block';document.getElementById('img-preview').src=src;}
-function removeImage(e){e.stopPropagation();removeImageState();document.getElementById('f-url').value='';document.getElementById('f-file').value='';}
-function removeImageState(){imgData=null;document.getElementById('img-upload-area').style.display='block';document.getElementById('img-preview-wrap').style.display='none';document.getElementById('img-preview').src='';}
-
-function saveProject(){
-  const title=document.getElementById('f-title').value.trim();
-  const cat=document.getElementById('f-cat').value;
-  const year=document.getElementById('f-year').value;
-  const desc=document.getElementById('f-desc').value.trim();
-  const urlVal=document.getElementById('f-url').value.trim();
-  if(!title){showToast('프로젝트명을 입력해 주세요.',true);return;}
-  if(!cat){showToast('카테고리를 선택해 주세요.',true);return;}
-  if(!year){showToast('시공 연도를 입력해 주세요.',true);return;}
-  const img=imgData||urlVal||'';
-  const projects=getProjects();
-  if(editId!==null){
-    const idx=projects.findIndex(x=>x.id===editId);
-    if(idx>-1)projects[idx]={...projects[idx],title,category:cat,year:parseInt(year),desc,img};
-    showToast('프로젝트가 수정되었습니다.');
-  } else {
-    projects.unshift({id:Date.now(),title,category:cat,year:parseInt(year),desc,img});
-    showToast('프로젝트가 추가되었습니다. 🌿');
+// UTILS
+function deepMerge(target, source) {
+  const out = Object.assign({}, target);
+  for (const k in source) {
+    if (source[k] && typeof source[k] === 'object' && !Array.isArray(source[k])) {
+      out[k] = deepMerge(target[k] || {}, source[k]);
+    } else { out[k] = source[k]; }
   }
-  saveProjects(projects);closeModal();renderPortfolioPage();
-}
-function deleteProject(id){
-  const p=getProjects().find(x=>x.id===id);if(!p)return;
-  if(!confirm(`"${p.title}" 프로젝트를 삭제하시겠습니까?`))return;
-  saveProjects(getProjects().filter(x=>x.id!==id));renderPortfolioPage();showToast('삭제되었습니다.');
+  return out;
 }
 
-// ── TOAST ──────────────────────────────────────────
-function showToast(msg,err=false){
-  const t=document.getElementById('toast');t.textContent=msg;
-  t.className='toast show'+(err?' error':'');
-  setTimeout(()=>t.classList.remove('show'),3000);
-}
+window.showToast = function(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+};
 
-// ── INIT ───────────────────────────────────────────
-function init(){renderPortfolioPage();loadSettings();}
-if(sessionStorage.getItem('gs_admin'))init();
+// PAGE NAV
+window.showPage = function(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = { portfolio:'포트폴리오 관리', editor:'프로젝트 편집', settings:'텍스트 & 정보 수정' };
+  if (titles[name]) document.getElementById('topbar-title').textContent = titles[name];
+};
+
+window.showStab = function(name, el) {
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('stab-' + name).classList.add('active');
+};
+
+// NAV IDs
+document.getElementById('nav-port') || document.querySelectorAll('.sb-item')[0]?.setAttribute('id','nav-port');
+
+// INIT
+async function init() {
+  await loadProjects();
+  await loadSettingsFromFirebase();
+}
+if (sessionStorage.getItem('gs_admin')) init();
 </script>
 </body>
 </html>
