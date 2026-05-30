@@ -132,15 +132,8 @@ async function init() {
 
     // 렌더링
     document.getElementById('app').innerHTML = `
-      <!-- HERO -->
-      <div class="proj-hero">
-        ${heroImg
-          ? `<img src="${heroImg}" alt="${p.title}"/>`
-          : `<div class="proj-hero-empty">🌿</div>`}
-      </div>
-
       <!-- CONTENT -->
-      <div class="proj-wrap">
+      <div class="proj-wrap" style="padding-top:100px">
         <div class="proj-meta">${p.category} · ${p.year}년${p.location ? ' · ' + p.location : ''}</div>
         <h1 class="proj-title">${p.title}</h1>
         <div class="proj-body">${p.body || '<p>내용이 없습니다.</p>'}</div>
