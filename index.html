@@ -161,8 +161,8 @@ h2{font-family:'Pretendard',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-wei
 #services h2{color:var(--mist);}
 #services .eyebrow{color:var(--sage);}
 #services .eyebrow::before{background:var(--sage);}
-.svc-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:80px;}
-.svc-intro .body-text{color:rgba(200,221,192,0.7);}
+.svc-intro{display:flex;flex-direction:column;gap:16px;margin-bottom:80px;}
+.svc-intro .body-text{color:rgba(200,221,192,0.7);max-width:560px;}
 .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.05);}
 .svc-card{background:rgba(30,61,26,0.85);padding:52px 40px;position:relative;overflow:hidden;transition:background 0.4s;}
 .svc-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--fern),var(--sage));transform:scaleX(0);transform-origin:left;transition:transform 0.5s;}
@@ -366,7 +366,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
   <div class="svc-intro sr">
     <div>
       <div class="eyebrow">서비스 안내</div>
-      <h2>전문 조경 서비스</h2>
+      <h2>전문 조경<br/>서비스</h2>
     </div>
     <p class="body-text">설계부터 시공, 유지 관리까지 — 자연을 담는 모든 과정을 함께합니다.</p>
   </div>
@@ -378,7 +378,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
 <section id="portfolio" style="padding:120px 0 0;">
   <div class="port-header sr">
     <div class="eyebrow">프로젝트 사례</div>
-    <h2>우리가 만든 공간들</h2>
+    <h2>우리가 만든<br/>공간들</h2>
   </div>
   <div class="port-scroll" id="port-scroll">
   </div>
@@ -395,8 +395,8 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
   </div>
   <div class="philo-text sr d1">
     <div class="eyebrow">우리의 철학</div>
-    <h2 id="d-philo-title">자연은 설계되지 않는다</h2>
-    <blockquote id="d-philo-quote">"가장 좋은 정원은 정원처럼 보이지 않는 정원"</blockquote>
+    <h2 id="d-philo-title">자연은<br/>설계되지 않는다</h2>
+    <blockquote id="d-philo-quote">"가장 좋은 정원은<br/>정원처럼 보이지 않는 정원"</blockquote>
     <p class="body-text" id="d-philo-body">금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다. 모든 식물에는 이야기가 있고, 모든 돌에는 시간이 깃들어 있습니다.</p>
     <div class="values" id="d-values">
       <div class="val"><div class="val-dot"></div><span id="d-val1">자연과의 조화를 최우선으로</span></div>
@@ -412,7 +412,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
   <div class="sr">
     <div class="eyebrow">프로젝트 문의</div>
     <h2>함께 만들어갈<br/>공간이 있나요?</h2>
-    <p class="body-text">새로운 프로젝트나 궁금한 점이 있으시면, 언제든지 연락 주세요.<br/>24시간 이내 답변 드리겠습니다.</p>
+    <p class="body-text">새로운 프로젝트나 궁금한 점이 있으시면<br/>언제든지 연락 주세요.<br/>24시간 이내 답변 드리겠습니다.</p>
     <div class="c-items">
       <div class="c-item"><div class="c-icon">📧</div><div><div class="c-label">이메일</div><div class="c-val" id="d-email">추후 업데이트 예정</div></div></div>
       <div class="c-item"><div class="c-icon">📞</div><div><div class="c-label">전화</div><div class="c-val" id="d-phone">추후 업데이트 예정</div></div></div>
@@ -513,7 +513,7 @@ function sendForm(){
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query, doc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, orderBy, query, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDD6CVdV3JfzjdOtyusbD1I7yCpZ59_Cpw",
@@ -664,8 +664,22 @@ async function renderPortfolio(){
   }
 }
 
+// FAVICON
+async function applyFavicon(){
+  try {
+    const snap = await getDoc(doc(db,'settings','favicon'));
+    if(snap.exists() && snap.data().url){
+      const url = snap.data().url;
+      let link = document.querySelector("link[rel~='icon']");
+      if(!link){ link=document.createElement('link'); link.rel='icon'; document.head.appendChild(link); }
+      link.href = url;
+    }
+  } catch(e){}
+}
+
 // INIT
 applySettings();
+applyFavicon();
 renderPortfolio();
 </script>
 </body>
