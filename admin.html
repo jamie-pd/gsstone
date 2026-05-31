@@ -391,7 +391,7 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
@@ -411,7 +411,7 @@ const auth = getAuth(app);
 
 window._db = db;
 window._storage = storage;
-window._fsLib = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, ref, uploadBytes, getDownloadURL };
+window._fsLib = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, ref, uploadBytes, getDownloadURL, setDoc };
 
 // ── AUTH ──────────────────────────────────────────
 window.doLogin = async function() {
@@ -742,16 +742,13 @@ window.saveSettings = async function() {
     about: {eyebrow:v('s-about-eyebrow'),title:v('s-about-title'),body:v('s-about-body'),stat1n:v('s-stat1-n'),stat1l:v('s-stat1-l'),stat2n:v('s-stat2-n'),stat2l:v('s-stat2-l'),stat3n:v('s-stat3-n'),stat3l:v('s-stat3-l')},
     philosophy: {title:v('s-philo-title'),quote:v('s-philo-quote'),body:v('s-philo-body'),val1:v('s-val1'),val2:v('s-val2'),val3:v('s-val3'),val4:v('s-val4')},
     contact: {email:v('s-email'),phone:v('s-phone'),address:v('s-address'),hours:v('s-hours'),mailto:v('s-mailto')},
+    services: {items: services},
   };
   try {
-    const { doc, updateDoc, collection, addDoc, getDocs } = window._fsLib;
+    const { setDoc, doc } = window._fsLib;
     for (const [key, val] of Object.entries(data)) {
-      try { await updateDoc(doc(db, 'settings', key), val); }
-      catch { await addDoc(collection(db, 'settings'), { ...val, _id: key }); }
+      await setDoc(doc(db, 'settings', key), val, { merge: true });
     }
-    // services 별도 저장
-    try { await updateDoc(doc(db, 'settings', 'services'), { items: services }); }
-    catch { await addDoc(collection(db, 'settings'), { items: services, _id: 'services' }); }
     showToast('저장 완료! 메인 사이트에 반영되었습니다 🌿');
     document.getElementById('save-hint').textContent = '마지막 저장: ' + new Date().toLocaleTimeString('ko-KR');
   } catch(e) {
