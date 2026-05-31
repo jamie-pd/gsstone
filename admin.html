@@ -169,7 +169,24 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 .cover-preview{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:16/9;}
 .cover-preview img{width:100%;height:100%;object-fit:cover;}
 .cover-remove{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);color:white;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.9rem;}
+
+/* CROP MODAL */
+.crop-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;}
+.crop-box{background:white;border-radius:8px;overflow:hidden;width:100%;max-width:700px;}
+.crop-header{padding:18px 24px;border-bottom:1px solid #f0ede6;display:flex;align-items:center;justify-content:space-between;}
+.crop-header h3{font-size:1rem;font-weight:600;color:var(--forest);}
+.crop-img-wrap{max-height:460px;overflow:hidden;background:#1a1a1a;}
+.crop-img-wrap img{max-width:100%;display:block;}
+.crop-footer{padding:16px 24px;border-top:1px solid #f0ede6;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.crop-btns{display:flex;gap:8px;}
+.crop-tool-btn{background:#f5f0e8;border:1px solid #e0dbd2;border-radius:4px;padding:7px 14px;font-size:0.8rem;cursor:pointer;font-family:'Pretendard',sans-serif;color:var(--ink);transition:background 0.2s;}
+.crop-tool-btn:hover{background:var(--mist);}
+.crop-ratio-btns{display:flex;gap:6px;}
+.crop-ratio-btn{background:#f5f0e8;border:1px solid #e0dbd2;border-radius:4px;padding:5px 10px;font-size:0.75rem;cursor:pointer;font-family:'Pretendard',sans-serif;color:var(--stone);}
+.crop-ratio-btn.active{background:var(--forest);color:white;border-color:var(--forest);}
 </style>
+<!-- Cropper.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"/>
 </head>
 <body>
 
@@ -369,6 +386,35 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 
 <div class="toast" id="toast"></div>
 
+<!-- CROP MODAL -->
+<div class="crop-backdrop" id="crop-modal" style="display:none">
+  <div class="crop-box">
+    <div class="crop-header">
+      <h3>사진 편집</h3>
+      <button onclick="cancelCrop()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--stone)">✕</button>
+    </div>
+    <div class="crop-img-wrap">
+      <img id="crop-img" src="" alt=""/>
+    </div>
+    <div class="crop-footer">
+      <div class="crop-ratio-btns">
+        <button class="crop-ratio-btn active" onclick="setCropRatio(NaN,this)">자유</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(1,this)">1:1</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(4/3,this)">4:3</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(16/9,this)">16:9</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(3/4,this)">3:4</button>
+      </div>
+      <div class="crop-btns">
+        <button class="crop-tool-btn" onclick="rotateCrop(-90)">↺ 회전</button>
+        <button class="crop-tool-btn" onclick="cancelCrop()">취소</button>
+        <button class="btn-primary" onclick="confirmCrop()">✓ 적용</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cropper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
@@ -586,6 +632,76 @@ window.removeCover = function() { coverData = null; removeCoverUI(); document.ge
 // BODY IMAGE INSERT
 window.insertImage = function() { document.getElementById('body-img-file').click(); };
 
+// CROP
+let cropper = null;
+let cropCallback = null;
+
+function openCropModal(file, callback) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    cropCallback = callback;
+    const img = document.getElementById('crop-img');
+    img.src = e.target.result;
+    document.getElementById('crop-modal').style.display = 'flex';
+    if (cropper) { cropper.destroy(); cropper = null; }
+    setTimeout(() => {
+      cropper = new Cropper(img, {
+        viewMode: 1,
+        dragMode: 'move',
+        autoCropArea: 0.9,
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: false,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: false,
+      });
+      // 기본 자유 비율 버튼 active
+      document.querySelectorAll('.crop-ratio-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelector('.crop-ratio-btn').classList.add('active');
+    }, 100);
+  };
+  reader.readAsDataURL(file);
+}
+
+window.setCropRatio = function(ratio, el) {
+  document.querySelectorAll('.crop-ratio-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if (cropper) cropper.setAspectRatio(ratio);
+};
+
+window.rotateCrop = function(deg) {
+  if (cropper) cropper.rotate(deg);
+};
+
+window.cancelCrop = function() {
+  document.getElementById('crop-modal').style.display = 'none';
+  if (cropper) { cropper.destroy(); cropper = null; }
+  cropCallback = null;
+  document.getElementById('body-img-file').value = '';
+};
+
+window.confirmCrop = async function() {
+  if (!cropper || !cropCallback) return;
+  const canvas = cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, imageSmoothingQuality: 'high' });
+  document.getElementById('crop-modal').style.display = 'none';
+  cropper.destroy(); cropper = null;
+  showToast('이미지 업로드 중...');
+  canvas.toBlob(async blob => {
+    try {
+      const { ref, uploadBytes, getDownloadURL } = window._fsLib;
+      const storageRef = ref(storage, `body/${Date.now()}.jpg`);
+      const snap = await uploadBytes(storageRef, blob);
+      const url = await getDownloadURL(snap.ref);
+      cropCallback(url);
+      showToast('이미지 삽입 완료!');
+    } catch(e) {
+      showToast('업로드 실패: ' + e.message, true);
+    }
+  }, 'image/jpeg', 0.88);
+};
+
 function resizeImage(file, maxWidth, maxHeight, quality) {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -606,27 +722,13 @@ function resizeImage(file, maxWidth, maxHeight, quality) {
   });
 }
 
-window.handleBodyImage = async function(input) {
+window.handleBodyImage = function(input) {
   const file = input.files[0];
   if (!file) return;
-  showToast('이미지 처리 중...');
-  try {
-    // 웹: 최대 1200px, 모바일 대응: 품질 0.85
-    const resized = await resizeImage(file, 1200, 900, 0.85);
-
-    // Base64 → Blob 변환 후 Firebase Storage 업로드
-    const res = await fetch(resized);
-    const blob = await res.blob();
-    const { ref, uploadBytes, getDownloadURL } = window._fsLib;
-    const storageRef = ref(storage, `body/${Date.now()}_${file.name}`);
-    const snap = await uploadBytes(storageRef, blob);
-    const url = await getDownloadURL(snap.ref);
+  openCropModal(file, url => {
     document.getElementById('editor-content').focus();
     document.execCommand('insertImage', false, url);
-    showToast('이미지 삽입 완료!');
-  } catch(e) {
-    showToast('업로드 실패: ' + e.message, true);
-  }
+  });
   input.value = '';
 };
 
