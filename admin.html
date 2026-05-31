@@ -314,6 +314,7 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
           <div class="stab" onclick="showStab('services',this)">서비스</div>
           <div class="stab" onclick="showStab('philosophy',this)">철학</div>
           <div class="stab" onclick="showStab('contact',this)">연락처</div>
+          <div class="stab" onclick="showStab('favicon',this)">파비콘</div>
         </div>
 
         <div class="settings-panel active" id="stab-hero">
@@ -373,6 +374,34 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
           </div>
         </div>
 
+        <div class="settings-panel" id="stab-favicon">
+          <div class="settings-card">
+            <div class="settings-card-title">파비콘 설정</div>
+            <p style="font-size:0.85rem;color:var(--stone);margin-bottom:20px">브라우저 탭에 표시되는 아이콘입니다. 정사각형 이미지(PNG)를 권장합니다.</p>
+            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+              <div>
+                <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:10px">미리보기</div>
+                <div id="favicon-preview" style="width:64px;height:64px;border:1.5px solid #e0dbd2;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#faf8f4;font-size:1.6rem;overflow:hidden">🌿</div>
+              </div>
+              <div style="flex:1;min-width:200px">
+                <div class="form-group">
+                  <label class="form-label">이미지 업로드</label>
+                  <div class="cover-upload" onclick="document.getElementById('favicon-file').click()" style="padding:16px">
+                    <div style="font-size:1.4rem;margin-bottom:6px;opacity:0.4">📁</div>
+                    <div style="font-size:0.82rem;color:var(--stone)">PNG · 권장 크기 32x32 또는 64x64</div>
+                  </div>
+                  <input type="file" id="favicon-file" accept="image/png,image/x-icon,image/svg+xml" style="display:none" onchange="handleFaviconFile(this)"/>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin:8px 0;color:var(--stone);font-size:0.75rem"><div style="flex:1;height:1px;background:#e0dbd2"></div>또는 URL<div style="flex:1;height:1px;background:#e0dbd2"></div></div>
+                <input class="form-input" id="s-favicon-url" placeholder="https://..." oninput="previewFavicon(this.value)"/>
+                <div style="margin-top:14px">
+                  <button class="btn-primary" onclick="saveFavicon()">💾 파비콘 저장</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="save-bar">
           <span class="save-hint" id="save-hint"></span>
           <button class="btn-secondary" onclick="loadSettings()">초기화</button>
@@ -418,7 +447,7 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
@@ -438,7 +467,7 @@ const auth = getAuth(app);
 
 window._db = db;
 window._storage = storage;
-window._fsLib = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, ref, uploadBytes, getDownloadURL, setDoc };
+window._fsLib = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, ref, uploadBytes, getDownloadURL, setDoc, getDoc };
 
 // ── AUTH ──────────────────────────────────────────
 window.doLogin = async function() {
@@ -830,6 +859,59 @@ window.saveSettings = async function() {
   }
 };
 
+// FAVICON
+window.previewFavicon = function(url) {
+  const preview = document.getElementById('favicon-preview');
+  if (!preview) return;
+  if (url) {
+    preview.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:contain;border-radius:6px"/>`;
+  } else {
+    preview.innerHTML = '🌿';
+  }
+};
+
+window.handleFaviconFile = async function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  showToast('파비콘 업로드 중...');
+  try {
+    const { ref, uploadBytes, getDownloadURL } = window._fsLib;
+    const storageRef = ref(storage, `favicon/${Date.now()}_${file.name}`);
+    const snap = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(snap.ref);
+    document.getElementById('s-favicon-url').value = url;
+    previewFavicon(url);
+    showToast('업로드 완료! 저장 버튼을 눌러주세요.');
+  } catch(e) {
+    showToast('업로드 실패: ' + e.message, true);
+  }
+  input.value = '';
+};
+
+window.saveFavicon = async function() {
+  const url = document.getElementById('s-favicon-url').value.trim();
+  if (!url) { showToast('파비콘 이미지를 먼저 업로드하거나 URL을 입력해주세요.', true); return; }
+  try {
+    const { setDoc, doc } = window._fsLib;
+    await setDoc(doc(db, 'settings', 'favicon'), { url }, { merge: true });
+    showToast('파비콘이 저장되었습니다! 🌿');
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, true);
+  }
+};
+
+async function loadFaviconSetting() {
+  try {
+    const { doc, getDoc } = window._fsLib;
+    const snap = await getDoc(doc(db, 'settings', 'favicon'));
+    if (snap.exists() && snap.data().url) {
+      const url = snap.data().url;
+      document.getElementById('s-favicon-url').value = url;
+      previewFavicon(url);
+    }
+  } catch(e) {}
+}
+
 // UTILS
 function deepMerge(target, source) {
   const out = Object.assign({}, target);
@@ -875,6 +957,7 @@ async function init() {
   _initialized = true;
   await loadProjects();
   await loadSettingsFromFirebase();
+  await loadFaviconSetting();
 }
 
 </script>
