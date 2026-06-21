@@ -380,6 +380,7 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
           <div class="img-action-bar" id="img-action-bar">
             <span>사진 선택됨</span>
             <div style="display:flex;gap:6px;margin-left:auto">
+              <button class="img-action-btn" onclick="cropSelectedImage()">비율 수정</button>
               <button class="img-action-btn" onclick="replaceSelectedImage()">교체</button>
               <button class="img-action-btn del" onclick="deleteSelectedImage()">삭제</button>
               <button class="img-action-btn" onclick="deselectEditorImage()">✕</button>
@@ -860,6 +861,25 @@ window.deselectEditorImage = function() {
   if (selectedEditorImg) selectedEditorImg.classList.remove('selected');
   selectedEditorImg = null;
   document.getElementById('img-action-bar').classList.remove('visible');
+};
+
+window.cropSelectedImage = async function() {
+  if (!selectedEditorImg) return;
+  const src = selectedEditorImg.src;
+  const targetImg = selectedEditorImg;
+  deselectEditorImage();
+  showToast('이미지 불러오는 중...');
+  try {
+    const res = await fetch(src, { mode: 'cors' });
+    const blob = await res.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+    openCropModal(file, url => {
+      targetImg.src = url;
+      showToast('비율 수정 완료!');
+    });
+  } catch(e) {
+    showToast('이미지를 불러올 수 없습니다. 교체 기능을 이용해 주세요.', true);
+  }
 };
 
 window.replaceSelectedImage = function() { document.getElementById('img-replace-file').click(); };
