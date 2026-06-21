@@ -360,7 +360,6 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
             <div class="settings-card-title">통계 숫자</div>
             <div class="stats-editor">
               <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat1-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat1-l"/></div></div>
-              <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat2-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat2-l"/></div></div>
               <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat3-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat3-l"/></div></div>
             </div>
           </div>
@@ -850,7 +849,7 @@ window.insertHeading = function(level) {
 // SETTINGS
 const DEFAULTS = {
   hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.',imageUrl:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1800&q=85'},
-  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도',imageUrl:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80',badgeN:'15+',badgeL:'Years of Craft'},
+  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat3n:'98%',stat3l:'고객 만족도',imageUrl:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80',badgeN:'15+',badgeL:'Years of Craft'},
   services:[
     {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
     {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
@@ -890,7 +889,6 @@ function applySettingsToForm(d) {
   sv('s-about-eyebrow', d.about?.eyebrow); sv('s-about-title', d.about?.title);
   sv('s-about-body', d.about?.body);
   sv('s-stat1-n', d.about?.stat1n); sv('s-stat1-l', d.about?.stat1l);
-  sv('s-stat2-n', d.about?.stat2n); sv('s-stat2-l', d.about?.stat2l);
   sv('s-stat3-n', d.about?.stat3n); sv('s-stat3-l', d.about?.stat3l);
   sv('s-about-imageUrl', d.about?.imageUrl);
   if(d.about?.imageUrl) previewSectionImage('s-about-imageUrl','about-img-preview');
@@ -962,7 +960,7 @@ window.saveSettings = async function() {
   }));
   const data = {
     hero: {eyebrow:v('s-hero-eyebrow'),thin:v('s-hero-thin'),title:v('s-hero-title'),sub:v('s-hero-sub'),imageUrl:v('s-hero-imageUrl')},
-    about: {eyebrow:v('s-about-eyebrow'),title:v('s-about-title'),body:v('s-about-body'),stat1n:v('s-stat1-n'),stat1l:v('s-stat1-l'),stat2n:v('s-stat2-n'),stat2l:v('s-stat2-l'),stat3n:v('s-stat3-n'),stat3l:v('s-stat3-l'),imageUrl:v('s-about-imageUrl'),badgeN:v('s-about-badgeN'),badgeL:v('s-about-badgeL')},
+    about: {eyebrow:v('s-about-eyebrow'),title:v('s-about-title'),body:v('s-about-body'),stat1n:v('s-stat1-n'),stat1l:v('s-stat1-l'),stat3n:v('s-stat3-n'),stat3l:v('s-stat3-l'),imageUrl:v('s-about-imageUrl'),badgeN:v('s-about-badgeN'),badgeL:v('s-about-badgeL')},
     philosophy: {title:v('s-philo-title'),quote:v('s-philo-quote'),body:v('s-philo-body'),val1:v('s-val1'),val2:v('s-val2'),val3:v('s-val3'),val4:v('s-val4'),imageUrl:v('s-philo-imageUrl')},
     contact: {email:v('s-email'),phone:v('s-phone'),address:v('s-address'),hours:v('s-hours'),mailto:v('s-mailto')},
     services: {items: services},

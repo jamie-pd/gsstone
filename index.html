@@ -153,7 +153,7 @@ h2{font-family:'Pretendard',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-wei
 .badge-l{font-size:0.78rem;letter-spacing:0.08em;margin-top:6px;opacity:0.75;}
 .about-text-col{padding:110px 80px;display:flex;flex-direction:column;justify-content:center;background:var(--parch);}
 .about-text-col .body-text{max-width:440px;margin-bottom:56px;}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:36px;}
 .stat{border-top:1.5px solid var(--mist);padding-top:22px;}
 .stat-n{font-family:'Pretendard',sans-serif;font-size:2.4rem;font-weight:600;color:var(--moss);line-height:1;letter-spacing:-0.02em;}
 .stat-l{font-size:0.78rem;color:var(--stone);margin-top:8px;font-weight:300;}
@@ -270,7 +270,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
   .ft-top{flex-direction:column;gap:32px;}
   .ft-nav{flex-wrap:wrap;gap:28px;}
   footer{padding:50px 24px 28px;}
-  .stats{grid-template-columns:repeat(3,1fr);gap:20px;}
+  .stats{grid-template-columns:repeat(2,1fr);gap:20px;}
 }
 </style>
 </head>
@@ -357,8 +357,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
     <p class="body-text" id="d-about-body">금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다. 단순한 시공이 아닌, 공간에 이야기를 담고 계절마다 달리 빛나는 살아있는 환경을 만들어 드립니다.</p>
     <div class="stats">
       <div class="stat sr d1"><div class="stat-n" id="d-stat1n">500+</div><div class="stat-l" id="d-stat1l">완료 프로젝트</div></div>
-      <div class="stat sr d2"><div class="stat-n" id="d-stat2n">15년</div><div class="stat-l" id="d-stat2l">전문 경력</div></div>
-      <div class="stat sr d3"><div class="stat-n" id="d-stat3n">98%</div><div class="stat-l" id="d-stat3l">고객 만족도</div></div>
+      <div class="stat sr d2"><div class="stat-n" id="d-stat3n">98%</div><div class="stat-l" id="d-stat3l">고객 만족도</div></div>
     </div>
   </div>
 </section>
@@ -531,7 +530,7 @@ const db = getFirestore(app);
 
 const DEFAULTS={
   hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.',imageUrl:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1800&q=85'},
-  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도',imageUrl:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80',badgeN:'15+',badgeL:'Years of Craft'},
+  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat3n:'98%',stat3l:'고객 만족도',imageUrl:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80',badgeN:'15+',badgeL:'Years of Craft'},
   services:[
     {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
     {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
@@ -573,7 +572,6 @@ async function applySettings(){
     set('d-about-title',nl2br(ab.title),true);
     set('d-about-body',ab.body);
     set('d-stat1n',ab.stat1n);set('d-stat1l',ab.stat1l);
-    set('d-stat2n',ab.stat2n);set('d-stat2l',ab.stat2l);
     set('d-stat3n',ab.stat3n);set('d-stat3l',ab.stat3l);
     applyImg('d-about-img',ab.imageUrl||DEFAULTS.about.imageUrl);
     set('d-about-badge-n',ab.badgeN||DEFAULTS.about.badgeN);
@@ -628,7 +626,6 @@ function applyDefaults(){
   set('d-about-eyebrow',d.about.eyebrow);set('d-about-title',nl2br(d.about.title),true);
   set('d-about-body',d.about.body);
   set('d-stat1n',d.about.stat1n);set('d-stat1l',d.about.stat1l);
-  set('d-stat2n',d.about.stat2n);set('d-stat2l',d.about.stat2l);
   set('d-stat3n',d.about.stat3n);set('d-stat3l',d.about.stat3l);
   applyImg('d-about-img',d.about.imageUrl);
   set('d-about-badge-n',d.about.badgeN);set('d-about-badge-l',d.about.badgeL);
