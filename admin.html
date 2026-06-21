@@ -546,17 +546,19 @@ function renderPortfolioList() {
   wrap.innerHTML = `<div class="port-list">${projects.map(p => `
     <div class="port-row">
       <div class="port-row-thumb">
-        ${p.coverUrl ? `<img src="${p.coverUrl}" alt="${p.title}"/>` : `<div class="port-row-thumb-ph">🌿</div>`}
+        ${p.coverUrl ? `<img src="${p.coverUrl}" alt=""/>` : `<div class="port-row-thumb-ph">🌿</div>`}
       </div>
       <div class="port-row-info">
         <div class="port-row-title">${p.title}</div>
         <div class="port-row-meta">${p.category} · ${p.year}년${p.location ? ' · '+p.location : ''}</div>
       </div>
       <div class="port-row-actions">
-        <button class="btn-edit" onclick="openEditor('${p.id}')">수정</button>
-        <button class="btn-del" onclick="deleteProject('${p.id}','${p.title}')">삭제</button>
+        <button class="btn-edit" data-id="${p.id}">수정</button>
+        <button class="btn-del" data-id="${p.id}" data-title="${p.title.replace(/"/g,'&quot;')}">삭제</button>
       </div>
     </div>`).join('')}</div>`;
+  wrap.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => openEditor(btn.dataset.id)));
+  wrap.querySelectorAll('.btn-del').forEach(btn => btn.addEventListener('click', () => deleteProject(btn.dataset.id, btn.dataset.title)));
 }
 
 window.openEditor = function(id = null) {
@@ -637,38 +639,16 @@ window.saveProject = async function() {
 
 window.deleteProject = async function(id, title) {
   if (!confirm(`"${title}" 프로젝트를 삭제하시겠습니까?`)) return;
-  const { deleteDoc, doc } = window._fsLib;
-  await deleteDoc(doc(db, 'projects', id));
-  showToast('삭제되었습니다.');
-  await loadProjects();
+  try {
+    const { deleteDoc, doc } = window._fsLib;
+    await deleteDoc(doc(db, 'projects', id));
+    showToast('삭제되었습니다.');
+    await loadProjects();
+  } catch(e) {
+    showToast('삭제 실패: ' + e.message, true);
+  }
 };
 
-// COVER IMAGE
-window.handleCoverFile = function(input) {
-  const file = input.files[0];
-  if (!file) return;
-  if (file.size > 5*1024*1024) { showToast('5MB 이하 이미지만 가능합니다.', true); return; }
-  coverData = file;
-  const url = URL.createObjectURL(file);
-  showCoverPreview(url);
-  document.getElementById('cover-url').value = '';
-};
-window.handleCoverUrl = function(input) {
-  const url = input.value.trim();
-  if (url) { coverData = null; showCoverPreview(url); }
-  else removeCoverUI();
-};
-function showCoverPreview(src) {
-  document.getElementById('cover-upload-area').style.display = 'none';
-  document.getElementById('cover-preview-wrap').style.display = 'block';
-  document.getElementById('cover-preview-img').src = src;
-}
-function removeCoverUI() {
-  document.getElementById('cover-upload-area').style.display = 'block';
-  document.getElementById('cover-preview-wrap').style.display = 'none';
-  document.getElementById('cover-preview-img').src = '';
-}
-window.removeCover = function() { coverData = null; removeCoverUI(); document.getElementById('cover-url').value = ''; document.getElementById('cover-file').value = ''; };
 
 // BODY IMAGE INSERT
 window.insertImage = function() { document.getElementById('body-img-file').click(); };
