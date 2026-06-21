@@ -869,17 +869,23 @@ window.cropSelectedImage = async function() {
   const src = selectedEditorImg.src;
   const targetImg = selectedEditorImg;
   deselectEditorImage();
+
+  const callback = url => { targetImg.src = url; showToast('비율 수정 완료!'); };
+
+  // 캐시된 data URL이 있으면 바로 크롭 모달 열기
+  if (_imgCache[src]) {
+    _openCropModalWithSrc(_imgCache[src], callback);
+    return;
+  }
+
+  // 없으면 fetch 시도 (이전 세션에서 저장된 이미지)
   showToast('이미지 불러오는 중...');
   try {
-    const res = await fetch(src, { mode: 'cors' });
+    const res = await fetch(src);
     const blob = await res.blob();
-    const file = new File([blob], 'image.jpg', { type: blob.type });
-    openCropModal(file, url => {
-      targetImg.src = url;
-      showToast('비율 수정 완료!');
-    });
+    openCropModal(new File([blob], 'image.jpg', { type: blob.type }), callback);
   } catch(e) {
-    showToast('이미지를 불러올 수 없습니다. 교체 기능을 이용해 주세요.', true);
+    showToast('이전에 저장된 사진은 "교체" 기능을 이용해 주세요.', true);
   }
 };
 
@@ -912,33 +918,35 @@ window.handleImageReplace = async function(input) {
 // CROP
 let cropper = null;
 let cropCallback = null;
+const _imgCache = {}; // firebase URL → data URL (세션 내 캐시)
+
+function _openCropModalWithSrc(src, callback) {
+  cropCallback = callback;
+  const img = document.getElementById('crop-img');
+  img.src = src;
+  document.getElementById('crop-modal').style.display = 'flex';
+  if (cropper) { cropper.destroy(); cropper = null; }
+  setTimeout(() => {
+    cropper = new Cropper(img, {
+      viewMode: 1,
+      dragMode: 'move',
+      autoCropArea: 0.9,
+      restore: false,
+      guides: true,
+      center: true,
+      highlight: false,
+      cropBoxMovable: true,
+      cropBoxResizable: true,
+      toggleDragModeOnDblclick: false,
+    });
+    document.querySelectorAll('.crop-ratio-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.crop-ratio-btn').classList.add('active');
+  }, 100);
+}
 
 function openCropModal(file, callback) {
   const reader = new FileReader();
-  reader.onload = e => {
-    cropCallback = callback;
-    const img = document.getElementById('crop-img');
-    img.src = e.target.result;
-    document.getElementById('crop-modal').style.display = 'flex';
-    if (cropper) { cropper.destroy(); cropper = null; }
-    setTimeout(() => {
-      cropper = new Cropper(img, {
-        viewMode: 1,
-        dragMode: 'move',
-        autoCropArea: 0.9,
-        restore: false,
-        guides: true,
-        center: true,
-        highlight: false,
-        cropBoxMovable: true,
-        cropBoxResizable: true,
-        toggleDragModeOnDblclick: false,
-      });
-      // 기본 자유 비율 버튼 active
-      document.querySelectorAll('.crop-ratio-btn').forEach(b=>b.classList.remove('active'));
-      document.querySelector('.crop-ratio-btn').classList.add('active');
-    }, 100);
-  };
+  reader.onload = e => _openCropModalWithSrc(e.target.result, callback);
   reader.readAsDataURL(file);
 }
 
@@ -965,12 +973,14 @@ window.confirmCrop = async function() {
   document.getElementById('crop-modal').style.display = 'none';
   cropper.destroy(); cropper = null;
   showToast('이미지 업로드 중...');
+  const cachedDataURL = canvas.toDataURL('image/jpeg', 0.88);
   canvas.toBlob(async blob => {
     try {
       const { ref, uploadBytes, getDownloadURL } = window._fsLib;
       const storageRef = ref(storage, `body/${Date.now()}.jpg`);
       const snap = await uploadBytes(storageRef, blob);
       const url = await getDownloadURL(snap.ref);
+      _imgCache[url] = cachedDataURL; // 비율 수정을 위해 캐시
       cropCallback(url);
       showToast('이미지 삽입 완료!');
     } catch(e) {
