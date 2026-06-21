@@ -297,7 +297,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-img"></div>
+  <div class="hero-img" id="d-hero-img"></div>
   <div class="hero-overlay"></div>
   <div class="hero-grain"></div>
   <div class="hero-content">
@@ -345,10 +345,10 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
 <!-- ABOUT -->
 <section id="about" style="padding:0;">
   <div class="about-img-col sr">
-    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80" alt="자연 정원" loading="lazy"/>
+    <img id="d-about-img" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80" alt="자연 정원" loading="lazy"/>
     <div class="about-badge">
-      <div class="badge-n">15+</div>
-      <div class="badge-l">Years of Craft</div>
+      <div class="badge-n" id="d-about-badge-n">15+</div>
+      <div class="badge-l" id="d-about-badge-l">Years of Craft</div>
     </div>
   </div>
   <div class="about-text-col sr d1">
@@ -379,8 +379,8 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
 <!-- PORTFOLIO -->
 <section id="portfolio" style="padding:120px 0 0;">
   <div class="port-header sr">
-    <div class="eyebrow">프로젝트 사례</div>
-    <h2>우리가 만든<br/>공간들</h2>
+    <div class="eyebrow" id="d-port-eyebrow">프로젝트 사례</div>
+    <h2 id="d-port-title">우리가 만든<br/>공간들</h2>
   </div>
   <div class="port-scroll" id="port-scroll">
   </div>
@@ -393,7 +393,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
 <!-- PHILOSOPHY -->
 <section id="philosophy" style="padding:0;">
   <div class="philo-img sr">
-    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80" alt="숲 철학" loading="lazy"/>
+    <img id="d-philo-img" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80" alt="숲 철학" loading="lazy"/>
   </div>
   <div class="philo-text sr d1">
     <div class="eyebrow">우리의 철학</div>
@@ -450,7 +450,7 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
   <div class="ft-top">
     <div>
       <div class="f-logo">금석<span>조경</span></div>
-      <div class="f-tag">자연을 담은 공간 — 2009년 창업</div>
+      <div class="f-tag" id="d-footer-tag">자연을 담은 공간 — 2009년 창업</div>
     </div>
     <div class="ft-nav">
       <div class="fc">
@@ -475,8 +475,8 @@ footer{background:#0e1a0c;padding:70px 64px 40px;}
     </div>
   </div>
   <div class="ft-bot">
-    <span>© 2025 금석조경. All rights reserved.</span>
-    <span>자연과 사람이 공존하는 공간</span>
+    <span id="d-footer-copy">© 2025 금석조경. All rights reserved.</span>
+    <span id="d-footer-sub">자연과 사람이 공존하는 공간</span>
   </div>
 </footer>
 
@@ -530,8 +530,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const DEFAULTS={
-  hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.'},
-  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도'},
+  hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.',imageUrl:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1800&q=85'},
+  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도',imageUrl:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=900&q=80',badgeN:'15+',badgeL:'Years of Craft'},
   services:[
     {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
     {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
@@ -540,14 +540,19 @@ const DEFAULTS={
     {icon:'💧',name:'수경 시설 조성',desc:'폭포, 연못, 분수로 시각적·청각적 편안함을 동시에 드립니다.'},
     {icon:'✂️',name:'유지 관리',desc:'완공 후에도 아름다움이 지속되도록 정기적인 관리 서비스를 제공합니다.'},
   ],
-  philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰'},
-  contact:{email:'',phone:'',address:'',hours:'평일 09:00 – 18:00',mailto:''}
+  philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰',imageUrl:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80'},
+  contact:{email:'',phone:'',address:'',hours:'평일 09:00 – 18:00',mailto:''},
+  footer:{tagline:'자연을 담은 공간 — 2009년 창업',copyright:'© 2025 금석조경. All rights reserved.',bottomText:'자연과 사람이 공존하는 공간'},
+  portfolio:{eyebrow:'프로젝트 사례',title:'우리가 만든\n공간들'}
 };
 
 function set(id,val,isHtml){if(!val)return;const el=document.getElementById(id);if(el){if(isHtml)el.innerHTML=val;else el.textContent=val;}}
 function nl2br(s){return(s||'').replace(/\n/g,'<br/>');}
 
 // ── SETTINGS ──────────────────────────────────────
+function applyImg(id,url){const el=document.getElementById(id);if(el&&url)el.src=url;}
+function applyBg(id,url){const el=document.getElementById(id);if(el&&url)el.style.backgroundImage=`url('${url}')`;}
+
 async function applySettings(){
   try {
     const snap = await getDocs(collection(db,'settings'));
@@ -556,10 +561,12 @@ async function applySettings(){
     const d = Object.assign({},DEFAULTS,saved);
 
     // Hero
-    set('d-hero-eyebrow',(d.hero||DEFAULTS.hero).eyebrow);
-    set('d-hero-thin',(d.hero||DEFAULTS.hero).thin);
-    set('d-hero-title',nl2br((d.hero||DEFAULTS.hero).title),true);
-    set('d-hero-sub',(d.hero||DEFAULTS.hero).sub);
+    const hr=d.hero||DEFAULTS.hero;
+    set('d-hero-eyebrow',hr.eyebrow);
+    set('d-hero-thin',hr.thin);
+    set('d-hero-title',nl2br(hr.title),true);
+    set('d-hero-sub',hr.sub);
+    applyBg('d-hero-img',hr.imageUrl||DEFAULTS.hero.imageUrl);
     // About
     const ab=d.about||DEFAULTS.about;
     set('d-about-eyebrow',ab.eyebrow);
@@ -568,6 +575,9 @@ async function applySettings(){
     set('d-stat1n',ab.stat1n);set('d-stat1l',ab.stat1l);
     set('d-stat2n',ab.stat2n);set('d-stat2l',ab.stat2l);
     set('d-stat3n',ab.stat3n);set('d-stat3l',ab.stat3l);
+    applyImg('d-about-img',ab.imageUrl||DEFAULTS.about.imageUrl);
+    set('d-about-badge-n',ab.badgeN||DEFAULTS.about.badgeN);
+    set('d-about-badge-l',ab.badgeL||DEFAULTS.about.badgeL);
     // Services
     const svcs = d.services?.items || DEFAULTS.services;
     const grid=document.getElementById('d-svc-grid');
@@ -588,6 +598,7 @@ async function applySettings(){
     set('d-philo-body',ph.body);
     set('d-val1',ph.val1);set('d-val2',ph.val2);
     set('d-val3',ph.val3);set('d-val4',ph.val4);
+    applyImg('d-philo-img',ph.imageUrl||DEFAULTS.philosophy.imageUrl);
     // Contact
     const ct=d.contact||DEFAULTS.contact;
     const fallback='추후 업데이트 예정';
@@ -595,8 +606,16 @@ async function applySettings(){
     set('d-phone',ct.phone||fallback);
     set('d-address',ct.address||fallback);
     set('d-hours',ct.hours||fallback);
+    // Footer
+    const ft=d.footer||DEFAULTS.footer;
+    set('d-footer-tag',ft.tagline||DEFAULTS.footer.tagline);
+    set('d-footer-copy',ft.copyright||DEFAULTS.footer.copyright);
+    set('d-footer-sub',ft.bottomText||DEFAULTS.footer.bottomText);
+    // Portfolio header
+    const pt=d.portfolio||DEFAULTS.portfolio;
+    set('d-port-eyebrow',pt.eyebrow||DEFAULTS.portfolio.eyebrow);
+    set('d-port-title',nl2br(pt.title||DEFAULTS.portfolio.title),true);
   } catch(e) {
-    // Firebase 오류 시 기본값 사용
     applyDefaults();
   }
 }
@@ -605,11 +624,14 @@ function applyDefaults(){
   const d=DEFAULTS;
   set('d-hero-eyebrow',d.hero.eyebrow);set('d-hero-thin',d.hero.thin);
   set('d-hero-title',nl2br(d.hero.title),true);set('d-hero-sub',d.hero.sub);
+  applyBg('d-hero-img',d.hero.imageUrl);
   set('d-about-eyebrow',d.about.eyebrow);set('d-about-title',nl2br(d.about.title),true);
   set('d-about-body',d.about.body);
   set('d-stat1n',d.about.stat1n);set('d-stat1l',d.about.stat1l);
   set('d-stat2n',d.about.stat2n);set('d-stat2l',d.about.stat2l);
   set('d-stat3n',d.about.stat3n);set('d-stat3l',d.about.stat3l);
+  applyImg('d-about-img',d.about.imageUrl);
+  set('d-about-badge-n',d.about.badgeN);set('d-about-badge-l',d.about.badgeL);
   const grid=document.getElementById('d-svc-grid');
   if(grid){
     const delays=['','d1','d2','','d1','d2'];
@@ -620,8 +642,11 @@ function applyDefaults(){
   set('d-philo-body',d.philosophy.body);
   set('d-val1',d.philosophy.val1);set('d-val2',d.philosophy.val2);
   set('d-val3',d.philosophy.val3);set('d-val4',d.philosophy.val4);
+  applyImg('d-philo-img',d.philosophy.imageUrl);
   set('d-email','추후 업데이트 예정');set('d-phone','추후 업데이트 예정');
   set('d-address','추후 업데이트 예정');set('d-hours',d.contact.hours);
+  set('d-footer-tag',d.footer.tagline);set('d-footer-copy',d.footer.copyright);set('d-footer-sub',d.footer.bottomText);
+  set('d-port-eyebrow',d.portfolio.eyebrow);set('d-port-title',nl2br(d.portfolio.title),true);
 }
 
 // ── PORTFOLIO ─────────────────────────────────────
