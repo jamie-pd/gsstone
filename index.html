@@ -635,7 +635,7 @@ function applyDefaults(){
   const grid=document.getElementById('d-svc-grid');
   if(grid){
     const delays=['','d1','d2','','d1','d2'];
-    grid.innerHTML=d.services.map((s,i)=>`<div class="svc-card sr ${delays[i]}"><div class="svc-num">0${i+1}</div><span class="svc-icon">${s.icon}</span><h3>${s.name}</h3><p>${s.desc}</p></div>`).join('');
+    grid.innerHTML=d.services.map((s,i)=>`<div class="svc-card sr ${delays[i]}"><div class="svc-num">0${i+1}</div><h3>${s.name}</h3><p>${s.desc}</p></div>`).join('');
     grid.querySelectorAll('.sr').forEach(el=>obs.observe(el));
   }
   set('d-philo-title',nl2br(d.philosophy.title),true);set('d-philo-quote',nl2br(d.philosophy.quote),true);

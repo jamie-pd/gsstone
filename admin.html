@@ -942,12 +942,10 @@ window.handleSectionImage = async function(input, targetInputId, previewId) {
 };
 
 function renderSvcEditor(svcs) {
-  const icons = ['🌱','🏡','🏢','🪨','💧','✂️','🌳','🌿','🏗️','💡','🌸','🍃'];
   document.getElementById('svc-editor-list').innerHTML = svcs.map((s,i) => `
     <div class="svc-editor-item">
       <div class="svc-editor-item-head">
         <span class="svc-editor-num">0${i+1}</span>
-        <select id="s-svc${i}-icon">${icons.map(ic=>`<option value="${ic}"${ic===s.icon?' selected':''}>${ic}</option>`).join('')}</select>
       </div>
       <div class="svc-editor-fields">
         <div><label class="form-label">서비스명</label><input class="form-input" id="s-svc${i}-name" value="${s.name||''}"/></div>
@@ -959,7 +957,6 @@ function renderSvcEditor(svcs) {
 window.saveSettings = async function() {
   const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
   const services = Array.from({length:6}, (_,i) => ({
-    icon: document.getElementById(`s-svc${i}-icon`)?.value || '',
     name: document.getElementById(`s-svc${i}-name`)?.value || '',
     desc: document.getElementById(`s-svc${i}-desc`)?.value || '',
   }));
