@@ -184,6 +184,54 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 .crop-ratio-btns{display:flex;gap:6px;}
 .crop-ratio-btn{background:#f5f0e8;border:1px solid #e0dbd2;border-radius:4px;padding:5px 10px;font-size:0.75rem;cursor:pointer;font-family:'Pretendard',sans-serif;color:var(--stone);}
 .crop-ratio-btn.active{background:var(--forest);color:white;border-color:var(--forest);}
+
+/* HAMBURGER */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:6px;flex-direction:column;justify-content:center;gap:5px;flex-shrink:0;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--forest);border-radius:2px;transition:all 0.25s;}
+
+/* SIDEBAR OVERLAY */
+.sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:99;display:none;}
+.sb-overlay.open{display:block;}
+
+/* MOBILE */
+@media(max-width:768px){
+  body{display:block;}
+  .login-box{width:100%;max-width:360px;padding:40px 28px;}
+  .hamburger{display:flex;}
+  .sidebar{transform:translateX(-100%);transition:transform 0.28s ease;z-index:200;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .topbar{padding:0 16px;gap:10px;}
+  .topbar-title{font-size:0.95rem;}
+  .topbar-right span{display:none;}
+  .topbar-site-link{font-size:0.72rem;padding:6px 10px;}
+  .content{padding:16px;}
+  .stats-row{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .stats-editor{grid-template-columns:1fr;}
+  .svc-editor-fields{grid-template-columns:1fr;}
+  .page-header{flex-direction:column;gap:12px;align-items:stretch;margin-bottom:20px;}
+  .page-header > div:last-child{display:flex;gap:8px;}
+  .page-header > div:last-child .btn-add,
+  .page-header > div:last-child .btn-secondary{flex:1;justify-content:center;}
+  .settings-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;}
+  .settings-tabs::-webkit-scrollbar{display:none;}
+  .stab{white-space:nowrap;padding:10px 16px;font-size:0.8rem;}
+  .settings-card{padding:20px 16px;}
+  .save-bar{padding:12px 16px;}
+  .port-row{flex-wrap:wrap;gap:12px;}
+  .port-row-actions{width:100%;display:flex;gap:8px;}
+  .port-row-actions .btn-edit,.port-row-actions .btn-del{flex:1;text-align:center;}
+  .editor-toolbar{gap:4px;padding:10px 14px;}
+  .editor-tool-btn{padding:6px 9px;font-size:0.78rem;}
+  .editor-content{padding:20px 16px;min-height:280px;}
+  .modal{max-width:calc(100vw - 24px);}
+  .modal-body,.modal-header,.modal-footer{padding-left:18px;padding-right:18px;}
+  .crop-footer{flex-direction:column;align-items:stretch;}
+  .crop-ratio-btns{justify-content:center;}
+  .crop-btns{justify-content:flex-end;}
+  .cover-upload{padding:14px;}
+}
 </style>
 <!-- Cropper.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"/>
@@ -203,17 +251,19 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
   </div>
 </div>
 
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+
 <div id="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sb-logo">
       <div class="sb-logo-text">금석<span>조경</span></div>
       <div class="sb-badge">ADMIN PANEL</div>
     </div>
     <nav class="sb-nav">
       <div class="sb-section">콘텐츠</div>
-      <div class="sb-item active" onclick="showPage('portfolio',this)">🖼️ 포트폴리오</div>
+      <div class="sb-item active" onclick="showPage('portfolio',this);closeSidebar()">🖼️ 포트폴리오</div>
       <div class="sb-section">사이트 설정</div>
-      <div class="sb-item" onclick="showPage('settings',this)">✏️ 텍스트 & 정보</div>
+      <div class="sb-item" onclick="showPage('settings',this);closeSidebar()">✏️ 텍스트 & 정보</div>
     </nav>
     <div class="sb-bottom">
       <div class="sb-logout" onclick="doLogout()">↩ 로그아웃</div>
@@ -222,6 +272,9 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
 
   <div class="main">
     <div class="topbar">
+      <button class="hamburger" onclick="toggleSidebar()" aria-label="메뉴">
+        <span></span><span></span><span></span>
+      </button>
       <div class="topbar-title" id="topbar-title">포트폴리오 관리</div>
       <div class="topbar-right">
         <a href="index.html" target="_blank" class="topbar-site-link">🌿 메인 사이트 ↗</a>
@@ -1065,6 +1118,18 @@ window.showStab = function(name, el) {
   document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('stab-' + name).classList.add('active');
+};
+
+// MOBILE SIDEBAR
+window.toggleSidebar = function() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sb-overlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+};
+window.closeSidebar = function() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
 };
 
 // NAV IDs
