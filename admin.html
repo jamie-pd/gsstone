@@ -802,6 +802,7 @@ async function loadSettingsFromFirebase() {
     const snap = await getDocs(collection(db, 'settings'));
     let saved = {};
     snap.docs.forEach(d => { saved[d.id] = d.data(); });
+    if (saved.services?.items) saved.services = saved.services.items;
     const d = deepMerge(JSON.parse(JSON.stringify(DEFAULTS)), saved);
     applySettingsToForm(d);
   } catch(e) {
