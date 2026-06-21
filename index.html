@@ -574,7 +574,6 @@ async function applySettings(){
       grid.innerHTML=svcs.map((s,i)=>`
         <div class="svc-card sr ${delays[i]}">
           <div class="svc-num">0${i+1}</div>
-          <span class="svc-icon">${s.icon}</span>
           <h3>${s.name}</h3>
           <p>${s.desc}</p>
         </div>`).join('');
