@@ -200,31 +200,48 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
   .hamburger{display:flex;}
   .sidebar{transform:translateX(-100%);transition:transform 0.28s ease;z-index:200;}
   .sidebar.open{transform:translateX(0);}
-  .main{margin-left:0;}
+
+  /* 핵심: main이 내부 콘텐츠 너비로 늘어나지 않도록 */
+  .main{margin-left:0;min-width:0;overflow-x:hidden;}
+  .content{padding:16px;overflow-x:hidden;}
+
   .topbar{padding:0 16px;gap:10px;}
   .topbar-title{font-size:0.95rem;}
   .topbar-right span{display:none;}
-  .topbar-site-link{font-size:0.72rem;padding:6px 10px;}
-  .content{padding:16px;}
+  .topbar-site-link{font-size:0;padding:8px 10px;}
+  .topbar-site-link::after{content:'사이트 ↗';font-size:0.72rem;}
+
   .stats-row{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
   .stats-editor{grid-template-columns:1fr;}
   .svc-editor-fields{grid-template-columns:1fr;}
+
   .page-header{flex-direction:column;gap:12px;align-items:stretch;margin-bottom:20px;}
   .page-header > div:last-child{display:flex;gap:8px;}
   .page-header > div:last-child .btn-add,
   .page-header > div:last-child .btn-secondary{flex:1;justify-content:center;}
+
   .settings-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;}
   .settings-tabs::-webkit-scrollbar{display:none;}
-  .stab{white-space:nowrap;padding:10px 16px;font-size:0.8rem;}
+  .stab{white-space:nowrap;padding:10px 14px;font-size:0.78rem;}
   .settings-card{padding:20px 16px;}
+
+  /* 이미지 업로드 섹션: 세로 스택 */
+  .img-upload-row{flex-direction:column !important;gap:16px !important;}
+  #hero-img-preview,#about-img-preview,#philo-img-preview{width:100% !important;height:80px !important;}
+  .img-upload-input{min-width:0 !important;}
+
   .save-bar{padding:12px 16px;}
+  .save-bar .btn-primary{font-size:0.82rem;padding:10px 14px;white-space:nowrap;}
+
   .port-row{flex-wrap:wrap;gap:12px;}
   .port-row-actions{width:100%;display:flex;gap:8px;}
   .port-row-actions .btn-edit,.port-row-actions .btn-del{flex:1;text-align:center;}
+
   .editor-toolbar{gap:4px;padding:10px 14px;}
   .editor-tool-btn{padding:6px 9px;font-size:0.78rem;}
   .editor-content{padding:20px 16px;min-height:280px;}
+
   .modal{max-width:calc(100vw - 24px);}
   .modal-body,.modal-header,.modal-footer{padding-left:18px;padding-right:18px;}
   .crop-footer{flex-direction:column;align-items:stretch;}
@@ -381,12 +398,12 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
           </div>
           <div class="settings-card">
             <div class="settings-card-title">히어로 배경 이미지</div>
-            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+            <div class="img-upload-row" style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
               <div>
                 <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:10px">미리보기</div>
                 <div id="hero-img-preview" style="width:200px;height:112px;border:1.5px solid #e0dbd2;border-radius:6px;overflow:hidden;background:#f0ede6;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.4">🖼️</div>
               </div>
-              <div style="flex:1;min-width:200px">
+              <div class="img-upload-input" style="flex:1;min-width:200px">
                 <div class="form-group">
                   <label class="form-label">이미지 업로드</label>
                   <div class="cover-upload" onclick="document.getElementById('hero-img-file').click()" style="padding:16px">
@@ -418,12 +435,12 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
           </div>
           <div class="settings-card">
             <div class="settings-card-title">소개 이미지 & 배지</div>
-            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:20px">
+            <div class="img-upload-row" style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:20px">
               <div>
                 <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:10px">미리보기</div>
                 <div id="about-img-preview" style="width:160px;height:120px;border:1.5px solid #e0dbd2;border-radius:6px;overflow:hidden;background:#f0ede6;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.4">🖼️</div>
               </div>
-              <div style="flex:1;min-width:200px">
+              <div class="img-upload-input" style="flex:1;min-width:200px">
                 <div class="form-group">
                   <label class="form-label">이미지 업로드</label>
                   <div class="cover-upload" onclick="document.getElementById('about-img-file').click()" style="padding:16px">
@@ -469,12 +486,12 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
           </div>
           <div class="settings-card">
             <div class="settings-card-title">철학 섹션 이미지</div>
-            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+            <div class="img-upload-row" style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
               <div>
                 <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:10px">미리보기</div>
                 <div id="philo-img-preview" style="width:160px;height:120px;border:1.5px solid #e0dbd2;border-radius:6px;overflow:hidden;background:#f0ede6;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.4">🖼️</div>
               </div>
-              <div style="flex:1;min-width:200px">
+              <div class="img-upload-input" style="flex:1;min-width:200px">
                 <div class="form-group">
                   <label class="form-label">이미지 업로드</label>
                   <div class="cover-upload" onclick="document.getElementById('philo-img-file').click()" style="padding:16px">
@@ -512,12 +529,12 @@ body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min
           <div class="settings-card">
             <div class="settings-card-title">파비콘 설정</div>
             <p style="font-size:0.85rem;color:var(--stone);margin-bottom:20px">브라우저 탭에 표시되는 아이콘입니다. 정사각형 이미지(PNG)를 권장합니다.</p>
-            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+            <div class="img-upload-row" style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
               <div>
                 <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:10px">미리보기</div>
                 <div id="favicon-preview" style="width:64px;height:64px;border:1.5px solid #e0dbd2;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#faf8f4;font-size:1.6rem;overflow:hidden">🌿</div>
               </div>
-              <div style="flex:1;min-width:200px">
+              <div class="img-upload-input" style="flex:1;min-width:200px">
                 <div class="form-group">
                   <label class="form-label">이미지 업로드</label>
                   <div class="cover-upload" onclick="document.getElementById('favicon-file').click()" style="padding:16px">
