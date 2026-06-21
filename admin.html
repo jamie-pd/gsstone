@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>금석조경 — 관리자</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --forest:#1e3d1a;--moss:#3a6b34;--fern:#5a8f4a;--sage:#8cb87a;
+  --mist:#c8ddc0;--parch:#f7f2ea;--paper:#fdfaf4;--stone:#8a8278;
+  --ink:#1c1a17;--danger:#c0392b;--sidebar-w:240px;
+}
+body{font-family:'Pretendard',sans-serif;background:#f0ede6;color:var(--ink);min-height:100vh;display:flex;}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--forest);display:flex;align-items:center;justify-content:center;z-index:1000;transition:opacity 0.5s,visibility 0.5s;}
+#login-screen.hidden{opacity:0;visibility:hidden;}
+.login-box{background:var(--paper);padding:52px 48px;width:380px;text-align:center;}
+.login-logo{font-size:1.8rem;font-weight:700;color:var(--forest);margin-bottom:6px;}
+.login-logo span{color:var(--sage);}
+.login-sub{font-size:0.78rem;color:var(--stone);letter-spacing:0.1em;margin-bottom:36px;}
+.login-label{display:block;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);text-align:left;margin-bottom:8px;}
+.login-input{width:100%;border:none;border-bottom:1.5px solid var(--mist);background:transparent;padding:10px 0;font-size:0.95rem;color:var(--ink);font-family:'Pretendard',sans-serif;outline:none;margin-bottom:24px;transition:border-color 0.3s;}
+.login-input:focus{border-color:var(--fern);}
+.login-btn{width:100%;background:var(--forest);color:white;border:none;padding:14px;font-size:0.9rem;cursor:pointer;font-family:'Pretendard',sans-serif;transition:background 0.3s;}
+.login-btn:hover{background:var(--moss);}
+.login-err{font-size:0.8rem;color:var(--danger);margin-top:14px;min-height:20px;}
+
+/* LAYOUT */
+#app{display:flex;width:100%;min-height:100vh;opacity:0;transition:opacity 0.4s;}
+#app.visible{opacity:1;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--forest);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;}
+.sb-logo{padding:28px 24px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.sb-logo-text{font-size:1.2rem;font-weight:700;color:var(--paper);}
+.sb-logo-text span{color:var(--sage);}
+.sb-badge{font-size:0.65rem;letter-spacing:0.1em;color:rgba(200,221,192,0.4);margin-top:4px;}
+.sb-nav{flex:1;padding:20px 0;overflow-y:auto;}
+.sb-section{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(200,221,192,0.35);padding:16px 24px 8px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:11px 24px;font-size:0.85rem;color:rgba(200,221,192,0.65);cursor:pointer;transition:all 0.2s;border-left:2px solid transparent;user-select:none;}
+.sb-item:hover{background:rgba(255,255,255,0.06);color:var(--mist);}
+.sb-item.active{background:rgba(140,184,122,0.12);color:var(--mist);border-left-color:var(--sage);}
+.sb-bottom{padding:20px 24px;border-top:1px solid rgba(255,255,255,0.08);}
+.sb-logout{display:flex;align-items:center;gap:10px;font-size:0.82rem;color:rgba(200,221,192,0.45);cursor:pointer;transition:color 0.2s;}
+.sb-logout:hover{color:var(--mist);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:white;padding:0 36px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,0.06);position:sticky;top:0;z-index:50;}
+.topbar-title{font-size:1.1rem;font-weight:700;color:var(--forest);}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-site-link{font-size:0.78rem;color:var(--fern);text-decoration:none;display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--mist);border-radius:3px;transition:all 0.2s;}
+.topbar-site-link:hover{background:var(--mist);}
+.content{padding:36px;flex:1;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;}
+.page-header h1{font-size:1.6rem;font-weight:700;color:var(--forest);}
+.page-header p{font-size:0.85rem;color:var(--stone);margin-top:4px;}
+
+/* PORTFOLIO LIST */
+.port-list{display:flex;flex-direction:column;gap:12px;}
+.port-row{background:white;border-radius:8px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:box-shadow 0.2s;}
+.port-row:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+.port-row-thumb{width:72px;height:56px;border-radius:6px;overflow:hidden;background:#e8e4dc;flex-shrink:0;}
+.port-row-thumb img{width:100%;height:100%;object-fit:cover;}
+.port-row-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#b0aa9f;}
+.port-row-info{flex:1;}
+.port-row-title{font-weight:600;color:var(--forest);font-size:0.95rem;margin-bottom:3px;}
+.port-row-meta{font-size:0.78rem;color:var(--stone);}
+.port-row-actions{display:flex;gap:8px;flex-shrink:0;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:white;padding:20px 24px;border-radius:6px;border-left:3px solid var(--sage);}
+.stat-card-n{font-size:2rem;font-weight:700;color:var(--forest);}
+.stat-card-l{font-size:0.78rem;color:var(--stone);margin-top:3px;}
+
+/* SETTINGS TABS */
+.settings-tabs{display:flex;gap:0;border-bottom:1.5px solid #e0dbd2;margin-bottom:28px;}
+.stab{padding:10px 22px;font-size:0.85rem;color:var(--stone);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all 0.2s;user-select:none;}
+.stab:hover{color:var(--forest);}
+.stab.active{color:var(--forest);border-bottom-color:var(--fern);font-weight:500;}
+.settings-panel{display:none;}
+.settings-panel.active{display:block;}
+.settings-card{background:white;border-radius:8px;padding:28px 32px;margin-bottom:20px;}
+.settings-card-title{font-size:1rem;font-weight:600;color:var(--forest);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #f0ede6;}
+.stats-editor{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.stat-edit-card{background:#faf8f4;border:1px solid #e8e4dc;border-radius:6px;padding:16px;}
+.svc-editor-list{display:flex;flex-direction:column;gap:12px;}
+.svc-editor-item{background:#faf8f4;border:1px solid #e8e4dc;border-radius:6px;padding:16px 18px;}
+.svc-editor-item-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.svc-editor-num{font-size:0.7rem;letter-spacing:0.15em;color:var(--stone);min-width:24px;}
+.svc-editor-fields{display:grid;grid-template-columns:1fr 2fr;gap:12px;}
+.save-bar{background:white;border-top:1px solid #e8e4dc;padding:16px 36px;display:flex;align-items:center;justify-content:flex-end;gap:12px;position:sticky;bottom:0;z-index:40;}
+.save-hint{font-size:0.8rem;color:var(--stone);flex:1;}
+
+/* FORM */
+.form-group{margin-bottom:20px;}
+.form-label{display:block;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:8px;}
+.form-hint{font-size:0.72rem;color:#b0aa9f;margin-top:5px;}
+.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid #e0dbd2;padding:10px 14px;font-size:0.9rem;color:var(--ink);font-family:'Pretendard',sans-serif;border-radius:4px;outline:none;transition:border-color 0.2s;background:white;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--fern);}
+.form-textarea{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* BLOG EDITOR */
+.editor-wrap{background:white;border-radius:8px;overflow:hidden;}
+.editor-toolbar{padding:14px 20px;border-bottom:1px solid #f0ede6;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.editor-tool-btn{background:#f5f0e8;border:none;border-radius:4px;padding:7px 12px;font-size:0.82rem;cursor:pointer;font-family:'Pretendard',sans-serif;color:var(--ink);transition:background 0.2s;display:flex;align-items:center;gap:5px;}
+.editor-tool-btn:hover{background:var(--mist);}
+.editor-tool-sep{width:1px;height:24px;background:#e0dbd2;margin:0 4px;}
+.editor-content{min-height:400px;padding:28px 32px;outline:none;font-size:0.95rem;line-height:1.85;color:var(--ink);}
+.editor-content:empty::before{content:'여기에 프로젝트 내용을 작성하세요...';color:#b0aa9f;}
+.editor-content img{max-width:100%;max-height:400px;width:auto;height:auto;border-radius:6px;margin:16px 0;display:block;}
+.editor-content h2{font-size:1.4rem;font-weight:700;margin:24px 0 12px;color:var(--forest);}
+.editor-content h3{font-size:1.1rem;font-weight:600;margin:20px 0 10px;color:var(--forest);}
+.editor-content p{margin:8px 0;}
+.editor-content ul,
+.editor-content ol{padding-left:24px;margin:8px 0;}
+.editor-content li{margin:4px 0;}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,40,18,0.55);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s;padding:20px;}
+.modal-backdrop.open{opacity:1;visibility:visible;}
+.modal{background:white;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;border-radius:8px;transform:translateY(20px);transition:transform 0.3s;}
+.modal-backdrop.open .modal{transform:translateY(0);}
+.modal-header{padding:22px 28px 18px;border-bottom:1px solid #f0ede6;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:white;z-index:1;}
+.modal-title{font-size:1.1rem;font-weight:700;color:var(--forest);}
+.modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--stone);}
+.modal-body{padding:22px 28px;}
+.modal-footer{padding:14px 28px 22px;display:flex;gap:10px;justify-content:flex-end;}
+
+/* BUTTONS */
+.btn-add{background:var(--forest);color:white;border:none;padding:11px 22px;font-size:0.85rem;cursor:pointer;font-family:'Pretendard',sans-serif;display:flex;align-items:center;gap:8px;transition:background 0.2s;border-radius:3px;font-weight:500;}
+.btn-add:hover{background:var(--moss);}
+.btn-primary{background:var(--forest);color:white;border:none;padding:11px 28px;font-size:0.88rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;transition:background 0.2s;font-weight:500;}
+.btn-primary:hover{background:var(--moss);}
+.btn-secondary{background:white;color:var(--stone);border:1.5px solid #e0dbd2;padding:11px 24px;font-size:0.88rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;transition:all 0.2s;}
+.btn-secondary:hover{border-color:var(--stone);}
+.btn-edit{background:var(--parch);color:var(--forest);border:1px solid var(--mist);padding:7px 14px;font-size:0.78rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;transition:background 0.2s;}
+.btn-edit:hover{background:var(--mist);}
+.btn-del{background:#fff0ee;color:var(--danger);border:1px solid #f5c6c2;padding:7px 14px;font-size:0.78rem;cursor:pointer;font-family:'Pretendard',sans-serif;border-radius:3px;}
+.btn-del:hover{background:#fde8e5;}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:80px 40px;color:var(--stone);}
+.empty-icon{font-size:3rem;margin-bottom:16px;opacity:0.4;}
+.empty-state p{font-size:0.9rem;line-height:1.7;}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--stone);font-size:0.9rem;gap:10px;}
+.spinner{width:20px;height:20px;border:2px solid var(--mist);border-top-color:var(--fern);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;background:var(--forest);color:white;padding:14px 22px;border-radius:4px;font-size:0.85rem;z-index:9000;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.error{background:var(--danger);}
+
+/* COVER IMAGE */
+.cover-upload{border:2px dashed #d5d0c8;border-radius:6px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:#faf8f4;}
+.cover-upload:hover{border-color:var(--sage);background:#f2f8ee;}
+.cover-preview{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:16/9;}
+.cover-preview img{width:100%;height:100%;object-fit:cover;}
+.cover-remove{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);color:white;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.9rem;}
+
+/* CROP MODAL */
+.crop-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;}
+.crop-box{background:white;border-radius:8px;overflow:hidden;width:100%;max-width:700px;}
+.crop-header{padding:18px 24px;border-bottom:1px solid #f0ede6;display:flex;align-items:center;justify-content:space-between;}
+.crop-header h3{font-size:1rem;font-weight:600;color:var(--forest);}
+.crop-img-wrap{max-height:460px;overflow:hidden;background:#1a1a1a;}
+.crop-img-wrap img{max-width:100%;display:block;}
+.crop-footer{padding:16px 24px;border-top:1px solid #f0ede6;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.crop-btns{display:flex;gap:8px;}
+.crop-tool-btn{background:#f5f0e8;border:1px solid #e0dbd2;border-radius:4px;padding:7px 14px;font-size:0.8rem;cursor:pointer;font-family:'Pretendard',sans-serif;color:var(--ink);transition:background 0.2s;}
+.crop-tool-btn:hover{background:var(--mist);}
+.crop-ratio-btns{display:flex;gap:6px;}
+.crop-ratio-btn{background:#f5f0e8;border:1px solid #e0dbd2;border-radius:4px;padding:5px 10px;font-size:0.75rem;cursor:pointer;font-family:'Pretendard',sans-serif;color:var(--stone);}
+.crop-ratio-btn.active{background:var(--forest);color:white;border-color:var(--forest);}
+</style>
+<!-- Cropper.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"/>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">금석<span>조경</span></div>
+    <div class="login-sub">ADMIN PANEL</div>
+    <label class="login-label">이메일</label>
+    <input class="login-input" id="l-email" type="email" placeholder="admin@example.com"/>
+    <label class="login-label">비밀번호</label>
+    <input class="login-input" id="l-pw" type="password" placeholder="••••••••"/>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-err" id="l-err"></div>
+  </div>
+</div>
+
+<div id="app">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-text">금석<span>조경</span></div>
+      <div class="sb-badge">ADMIN PANEL</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">콘텐츠</div>
+      <div class="sb-item active" onclick="showPage('portfolio',this)">🖼️ 포트폴리오</div>
+      <div class="sb-section">사이트 설정</div>
+      <div class="sb-item" onclick="showPage('settings',this)">✏️ 텍스트 & 정보</div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-logout" onclick="doLogout()">↩ 로그아웃</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">포트폴리오 관리</div>
+      <div class="topbar-right">
+        <a href="index.html" target="_blank" class="topbar-site-link">🌿 메인 사이트 ↗</a>
+        <span style="font-size:0.8rem;color:var(--stone)">관리자</span>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- PORTFOLIO -->
+      <div class="page active" id="page-portfolio">
+        <div class="page-header">
+          <div><h1>포트폴리오</h1><p>프로젝트를 등록하고 관리합니다</p></div>
+          <button class="btn-add" onclick="openEditor()">＋ 프로젝트 추가</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-card-n" id="stat-total">-</div><div class="stat-card-l">전체 프로젝트</div></div>
+          <div class="stat-card" style="border-left-color:#e67e22"><div class="stat-card-n" id="stat-year">-</div><div class="stat-card-l">올해 등록</div></div>
+          <div class="stat-card" style="border-left-color:#4a90d9"><div class="stat-card-n" id="stat-cats">-</div><div class="stat-card-l">카테고리 수</div></div>
+        </div>
+        <div id="port-list-wrap">
+          <div class="loading"><div class="spinner"></div> 불러오는 중...</div>
+        </div>
+      </div>
+
+      <!-- EDITOR (블로그형) -->
+      <div class="page" id="page-editor">
+        <div class="page-header">
+          <div><h1 id="editor-page-title">프로젝트 추가</h1><p>사진과 글을 자유롭게 구성하세요</p></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn-secondary" onclick="showPage('portfolio',document.getElementById('nav-port'))">← 목록</button>
+            <button class="btn-add" onclick="saveProject()">💾 저장하고 반영</button>
+          </div>
+        </div>
+
+        <!-- 기본 정보 -->
+        <div style="background:white;border-radius:8px;padding:28px 32px;margin-bottom:20px;">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">프로젝트명 *</label>
+              <input class="form-input" id="e-title" placeholder="예: 강남 주거 단지 정원"/>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">카테고리 *</label>
+              <select class="form-select" id="e-cat">
+                <option value="">선택</option>
+                <option>주거 조경</option><option>상업 조경</option><option>공공 조경</option>
+                <option>수경 시설</option><option>전통 정원</option><option>기타</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:16px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">시공 연도 *</label>
+              <input class="form-input" id="e-year" type="number" placeholder="2024"/>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">위치</label>
+              <input class="form-input" id="e-location" placeholder="예: 서울 강남구"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- 본문 에디터 -->
+        <div style="background:white;border-radius:8px;overflow:hidden;margin-bottom:20px;">
+          <div style="padding:16px 20px;border-bottom:1px solid #f0ede6;font-size:1rem;font-weight:600;color:var(--forest)">본문 내용</div>
+          <div class="editor-toolbar">
+            <button class="editor-tool-btn" onclick="fmt('bold')"><b>B</b></button>
+            <button class="editor-tool-btn" onclick="fmt('italic')"><i>I</i></button>
+            <div class="editor-tool-sep"></div>
+            <button class="editor-tool-btn" onclick="insertHeading(2)">H2</button>
+            <button class="editor-tool-btn" onclick="insertHeading(3)">H3</button>
+            <div class="editor-tool-sep"></div>
+            <button class="editor-tool-btn" onclick="fmt('insertUnorderedList')">• 목록</button>
+            <div class="editor-tool-sep"></div>
+            <button class="editor-tool-btn" onclick="insertImage()">🖼️ 사진 삽입</button>
+            <input type="file" id="body-img-file" accept="image/*" style="display:none" onchange="handleBodyImage(this)"/>
+          </div>
+          <div class="editor-content" id="editor-content" contenteditable="true"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="page-header">
+          <div><h1>텍스트 & 정보 수정</h1><p>저장하면 메인 사이트에 즉시 반영됩니다</p></div>
+        </div>
+        <div class="settings-tabs">
+          <div class="stab active" onclick="showStab('hero',this)">히어로</div>
+          <div class="stab" onclick="showStab('about',this)">회사 소개</div>
+          <div class="stab" onclick="showStab('services',this)">서비스</div>
+          <div class="stab" onclick="showStab('philosophy',this)">철학</div>
+          <div class="stab" onclick="showStab('contact',this)">연락처</div>
+          <div class="stab" onclick="showStab('favicon',this)">파비콘</div>
+        </div>
+
+        <div class="settings-panel active" id="stab-hero">
+          <div class="settings-card">
+            <div class="settings-card-title">히어로 섹션</div>
+            <div class="form-group"><label class="form-label">소제목</label><input class="form-input" id="s-hero-eyebrow"/></div>
+            <div class="form-group"><label class="form-label">메인 제목 첫줄 (얇은 텍스트)</label><input class="form-input" id="s-hero-thin"/></div>
+            <div class="form-group"><label class="form-label">메인 제목 (굵은 텍스트)</label><textarea class="form-textarea" id="s-hero-title" style="min-height:60px"></textarea><div class="form-hint">줄바꿈은 Enter</div></div>
+            <div class="form-group"><label class="form-label">부제목 설명</label><textarea class="form-textarea" id="s-hero-sub"></textarea></div>
+          </div>
+        </div>
+
+        <div class="settings-panel" id="stab-about">
+          <div class="settings-card">
+            <div class="settings-card-title">회사 소개 문구</div>
+            <div class="form-group"><label class="form-label">소제목</label><input class="form-input" id="s-about-eyebrow"/></div>
+            <div class="form-group"><label class="form-label">메인 제목</label><textarea class="form-textarea" id="s-about-title" style="min-height:60px"></textarea></div>
+            <div class="form-group"><label class="form-label">본문</label><textarea class="form-textarea" id="s-about-body"></textarea></div>
+          </div>
+          <div class="settings-card">
+            <div class="settings-card-title">통계 숫자</div>
+            <div class="stats-editor">
+              <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat1-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat1-l"/></div></div>
+              <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat2-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat2-l"/></div></div>
+              <div class="stat-edit-card"><div class="form-group" style="margin-bottom:10px"><label class="form-label">숫자</label><input class="form-input" id="s-stat3-n"/></div><div class="form-group" style="margin-bottom:0"><label class="form-label">라벨</label><input class="form-input" id="s-stat3-l"/></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-panel" id="stab-services">
+          <div class="settings-card">
+            <div class="settings-card-title">서비스 항목 (6개)</div>
+            <div class="svc-editor-list" id="svc-editor-list"></div>
+          </div>
+        </div>
+
+        <div class="settings-panel" id="stab-philosophy">
+          <div class="settings-card">
+            <div class="settings-card-title">철학 섹션</div>
+            <div class="form-group"><label class="form-label">메인 제목</label><textarea class="form-textarea" id="s-philo-title" style="min-height:60px"></textarea></div>
+            <div class="form-group"><label class="form-label">인용구</label><textarea class="form-textarea" id="s-philo-quote"></textarea></div>
+            <div class="form-group"><label class="form-label">본문</label><textarea class="form-textarea" id="s-philo-body"></textarea></div>
+            <div class="settings-card-title" style="margin-top:20px">핵심 가치 (4개)</div>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+              <input class="form-input" id="s-val1"/><input class="form-input" id="s-val2"/>
+              <input class="form-input" id="s-val3"/><input class="form-input" id="s-val4"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-panel" id="stab-contact">
+          <div class="settings-card">
+            <div class="settings-card-title">연락처 정보</div>
+            <div class="form-row"><div class="form-group"><label class="form-label">이메일</label><input class="form-input" id="s-email"/></div><div class="form-group"><label class="form-label">전화번호</label><input class="form-input" id="s-phone"/></div></div>
+            <div class="form-group"><label class="form-label">주소</label><input class="form-input" id="s-address"/></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">운영 시간</label><input class="form-input" id="s-hours"/></div><div class="form-group"><label class="form-label">문의 수신 이메일</label><input class="form-input" id="s-mailto"/></div></div>
+          </div>
+        </div>
+
+        <div class="settings-panel" id="stab-favicon">
+          <div class="settings-card">
+            <div class="settings-card-title">파비콘 설정</div>
+            <p style="font-size:0.85rem;color:var(--stone);margin-bottom:20px">브라우저 탭에 표시되는 아이콘입니다. 정사각형 이미지(PNG)를 권장합니다.</p>
+            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+              <div>
+                <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);margin-bottom:10px">미리보기</div>
+                <div id="favicon-preview" style="width:64px;height:64px;border:1.5px solid #e0dbd2;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#faf8f4;font-size:1.6rem;overflow:hidden">🌿</div>
+              </div>
+              <div style="flex:1;min-width:200px">
+                <div class="form-group">
+                  <label class="form-label">이미지 업로드</label>
+                  <div class="cover-upload" onclick="document.getElementById('favicon-file').click()" style="padding:16px">
+                    <div style="font-size:1.4rem;margin-bottom:6px;opacity:0.4">📁</div>
+                    <div style="font-size:0.82rem;color:var(--stone)">PNG · 권장 크기 32x32 또는 64x64</div>
+                  </div>
+                  <input type="file" id="favicon-file" accept="image/png,image/x-icon,image/svg+xml" style="display:none" onchange="handleFaviconFile(this)"/>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin:8px 0;color:var(--stone);font-size:0.75rem"><div style="flex:1;height:1px;background:#e0dbd2"></div>또는 URL<div style="flex:1;height:1px;background:#e0dbd2"></div></div>
+                <input class="form-input" id="s-favicon-url" placeholder="https://..." oninput="previewFavicon(this.value)"/>
+                <div style="margin-top:14px">
+                  <button class="btn-primary" onclick="saveFavicon()">💾 파비콘 저장</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="save-bar">
+          <span class="save-hint" id="save-hint"></span>
+          <button class="btn-secondary" onclick="loadSettings()">초기화</button>
+          <button class="btn-primary" onclick="saveSettings()">💾 저장하고 반영하기</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- CROP MODAL -->
+<div class="crop-backdrop" id="crop-modal" style="display:none">
+  <div class="crop-box">
+    <div class="crop-header">
+      <h3>사진 편집</h3>
+      <button onclick="cancelCrop()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--stone)">✕</button>
+    </div>
+    <div class="crop-img-wrap">
+      <img id="crop-img" src="" alt=""/>
+    </div>
+    <div class="crop-footer">
+      <div class="crop-ratio-btns">
+        <button class="crop-ratio-btn active" onclick="setCropRatio(NaN,this)">자유</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(1,this)">1:1</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(4/3,this)">4:3</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(16/9,this)">16:9</button>
+        <button class="crop-ratio-btn" onclick="setCropRatio(3/4,this)">3:4</button>
+      </div>
+      <div class="crop-btns">
+        <button class="crop-tool-btn" onclick="rotateCrop(-90)">↺ 회전</button>
+        <button class="crop-tool-btn" onclick="cancelCrop()">취소</button>
+        <button class="btn-primary" onclick="confirmCrop()">✓ 적용</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cropper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, browserSessionPersistence, setPersistence } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDD6CVdV3JfzjdOtyusbD1I7yCpZ59_Cpw",
+  authDomain: "gsstone.firebaseapp.com",
+  projectId: "gsstone",
+  storageBucket: "gsstone.firebasestorage.app",
+  messagingSenderId: "125014531671",
+  appId: "1:125014531671:web:5cd9324391874e07820d12"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const auth = getAuth(app);
+await setPersistence(auth, browserSessionPersistence);
+
+window._db = db;
+window._storage = storage;
+window._fsLib = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, ref, uploadBytes, getDownloadURL, setDoc, getDoc };
+
+// ── AUTH ──────────────────────────────────────────
+window.doLogin = async function() {
+  const email = document.getElementById('l-email').value.trim();
+  const pw = document.getElementById('l-pw').value;
+  const errEl = document.getElementById('l-err');
+  errEl.textContent = '';
+  if (!email || !pw) { errEl.textContent = '이메일과 비밀번호를 입력해 주세요.'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pw);
+  } catch(e) {
+    const code = e.code || '';
+    if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+      errEl.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
+    } else if (code === 'auth/too-many-requests') {
+      errEl.textContent = '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.';
+    } else if (code === 'auth/network-request-failed') {
+      errEl.textContent = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해 주세요.';
+    } else if (code === 'auth/operation-not-allowed') {
+      errEl.textContent = '이메일 로그인이 비활성화 상태입니다. Firebase 콘솔을 확인해 주세요.';
+    } else {
+      errEl.textContent = `로그인 오류: ${code || e.message}`;
+    }
+  }
+};
+
+document.getElementById('l-pw').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+document.getElementById('l-email').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('l-pw').focus(); });
+
+window.doLogout = async function() {
+  await signOut(auth);
+};
+
+// 로그인 상태 감지
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    init();
+  } else {
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('app').classList.remove('visible');
+    document.getElementById('l-email').value = '';
+    document.getElementById('l-pw').value = '';
+  }
+});
+
+// PORTFOLIO
+let projects = [];
+let editingId = null;
+let coverData = null;
+
+async function loadProjects() {
+  const { collection, getDocs, orderBy, query } = window._fsLib;
+  const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+  const snap = await getDocs(q);
+  projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderPortfolioList();
+  renderStats();
+}
+
+function renderStats() {
+  const yr = new Date().getFullYear();
+  document.getElementById('stat-total').textContent = projects.length;
+  document.getElementById('stat-year').textContent = projects.filter(p => String(p.year) === String(yr)).length;
+  document.getElementById('stat-cats').textContent = new Set(projects.map(p => p.category)).size;
+}
+
+function renderPortfolioList() {
+  const wrap = document.getElementById('port-list-wrap');
+  if (!projects.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">🌱</div><p>아직 등록된 프로젝트가 없습니다.<br/>위의 \'프로젝트 추가\' 버튼으로 시작하세요!</p></div>';
+    return;
+  }
+  wrap.innerHTML = `<div class="port-list">${projects.map(p => `
+    <div class="port-row">
+      <div class="port-row-thumb">
+        ${p.coverUrl ? `<img src="${p.coverUrl}" alt="${p.title}"/>` : `<div class="port-row-thumb-ph">🌿</div>`}
+      </div>
+      <div class="port-row-info">
+        <div class="port-row-title">${p.title}</div>
+        <div class="port-row-meta">${p.category} · ${p.year}년${p.location ? ' · '+p.location : ''}</div>
+      </div>
+      <div class="port-row-actions">
+        <button class="btn-edit" onclick="openEditor('${p.id}')">수정</button>
+        <button class="btn-del" onclick="deleteProject('${p.id}','${p.title}')">삭제</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+window.openEditor = function(id = null) {
+  editingId = id;
+  coverData = null;
+  document.getElementById('e-title').value = '';
+  document.getElementById('e-cat').value = '';
+  document.getElementById('e-year').value = '';
+  document.getElementById('e-location').value = '';
+  document.getElementById('editor-content').innerHTML = '';
+
+  if (id) {
+    const p = projects.find(x => x.id === id);
+    if (p) {
+      document.getElementById('e-title').value = p.title || '';
+      document.getElementById('e-cat').value = p.category || '';
+      document.getElementById('e-year').value = p.year || '';
+      document.getElementById('e-location').value = p.location || '';
+      document.getElementById('editor-content').innerHTML = p.body || '';
+    }
+    document.getElementById('editor-page-title').textContent = '프로젝트 수정';
+  } else {
+    document.getElementById('editor-page-title').textContent = '프로젝트 추가';
+  }
+  showPage('editor', null);
+  document.getElementById('topbar-title').textContent = id ? '프로젝트 수정' : '프로젝트 추가';
+};
+
+window.saveProject = async function() {
+  const title = document.getElementById('e-title').value.trim();
+  const cat = document.getElementById('e-cat').value;
+  const year = document.getElementById('e-year').value;
+  if (!title) { showToast('프로젝트명을 입력해 주세요.', true); return; }
+  if (!cat) { showToast('카테고리를 선택해 주세요.', true); return; }
+  if (!year) { showToast('시공 연도를 입력해 주세요.', true); return; }
+
+  showToast('저장 중...');
+
+  let coverUrl = '';
+  // 본문 첫 번째 이미지를 썸네일로 자동 사용
+  const bodyDiv = document.createElement('div');
+  bodyDiv.innerHTML = document.getElementById('editor-content').innerHTML;
+  const firstImg = bodyDiv.querySelector('img');
+  if (firstImg) coverUrl = firstImg.src;
+  // 기존 coverUrl 유지 (수정 시)
+  if (!coverUrl && editingId) {
+    const p = projects.find(x => x.id === editingId);
+    if (p && p.coverUrl) coverUrl = p.coverUrl;
+  }
+
+  const data = {
+    title,
+    category: cat,
+    year: parseInt(year),
+    location: document.getElementById('e-location').value.trim(),
+    body: document.getElementById('editor-content').innerHTML,
+    coverUrl,
+    updatedAt: Date.now()
+  };
+
+  try {
+    const { collection, addDoc, updateDoc, doc } = window._fsLib;
+    if (editingId) {
+      await updateDoc(doc(db, 'projects', editingId), data);
+      showToast('수정되었습니다! 메인 사이트에 반영됩니다 🌿');
+    } else {
+      data.createdAt = Date.now();
+      await addDoc(collection(db, 'projects'), data);
+      showToast('등록되었습니다! 메인 사이트에 반영됩니다 🌿');
+    }
+    await loadProjects();
+    showPage('portfolio', document.querySelector('.sb-item'));
+    document.getElementById('topbar-title').textContent = '포트폴리오 관리';
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, true);
+  }
+};
+
+window.deleteProject = async function(id, title) {
+  if (!confirm(`"${title}" 프로젝트를 삭제하시겠습니까?`)) return;
+  const { deleteDoc, doc } = window._fsLib;
+  await deleteDoc(doc(db, 'projects', id));
+  showToast('삭제되었습니다.');
+  await loadProjects();
+};
+
+// COVER IMAGE
+window.handleCoverFile = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5*1024*1024) { showToast('5MB 이하 이미지만 가능합니다.', true); return; }
+  coverData = file;
+  const url = URL.createObjectURL(file);
+  showCoverPreview(url);
+  document.getElementById('cover-url').value = '';
+};
+window.handleCoverUrl = function(input) {
+  const url = input.value.trim();
+  if (url) { coverData = null; showCoverPreview(url); }
+  else removeCoverUI();
+};
+function showCoverPreview(src) {
+  document.getElementById('cover-upload-area').style.display = 'none';
+  document.getElementById('cover-preview-wrap').style.display = 'block';
+  document.getElementById('cover-preview-img').src = src;
+}
+function removeCoverUI() {
+  document.getElementById('cover-upload-area').style.display = 'block';
+  document.getElementById('cover-preview-wrap').style.display = 'none';
+  document.getElementById('cover-preview-img').src = '';
+}
+window.removeCover = function() { coverData = null; removeCoverUI(); document.getElementById('cover-url').value = ''; document.getElementById('cover-file').value = ''; };
+
+// BODY IMAGE INSERT
+window.insertImage = function() { document.getElementById('body-img-file').click(); };
+
+// CROP
+let cropper = null;
+let cropCallback = null;
+
+function openCropModal(file, callback) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    cropCallback = callback;
+    const img = document.getElementById('crop-img');
+    img.src = e.target.result;
+    document.getElementById('crop-modal').style.display = 'flex';
+    if (cropper) { cropper.destroy(); cropper = null; }
+    setTimeout(() => {
+      cropper = new Cropper(img, {
+        viewMode: 1,
+        dragMode: 'move',
+        autoCropArea: 0.9,
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: false,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: false,
+      });
+      // 기본 자유 비율 버튼 active
+      document.querySelectorAll('.crop-ratio-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelector('.crop-ratio-btn').classList.add('active');
+    }, 100);
+  };
+  reader.readAsDataURL(file);
+}
+
+window.setCropRatio = function(ratio, el) {
+  document.querySelectorAll('.crop-ratio-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if (cropper) cropper.setAspectRatio(ratio);
+};
+
+window.rotateCrop = function(deg) {
+  if (cropper) cropper.rotate(deg);
+};
+
+window.cancelCrop = function() {
+  document.getElementById('crop-modal').style.display = 'none';
+  if (cropper) { cropper.destroy(); cropper = null; }
+  cropCallback = null;
+  document.getElementById('body-img-file').value = '';
+};
+
+window.confirmCrop = async function() {
+  if (!cropper || !cropCallback) return;
+  const canvas = cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, imageSmoothingQuality: 'high' });
+  document.getElementById('crop-modal').style.display = 'none';
+  cropper.destroy(); cropper = null;
+  showToast('이미지 업로드 중...');
+  canvas.toBlob(async blob => {
+    try {
+      const { ref, uploadBytes, getDownloadURL } = window._fsLib;
+      const storageRef = ref(storage, `body/${Date.now()}.jpg`);
+      const snap = await uploadBytes(storageRef, blob);
+      const url = await getDownloadURL(snap.ref);
+      cropCallback(url);
+      showToast('이미지 삽입 완료!');
+    } catch(e) {
+      showToast('업로드 실패: ' + e.message, true);
+    }
+  }, 'image/jpeg', 0.88);
+};
+
+function resizeImage(file, maxWidth, maxHeight, quality) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = h * maxWidth / w; w = maxWidth; }
+        if (h > maxHeight) { w = w * maxHeight / h; h = maxHeight; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+window.handleBodyImage = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  openCropModal(file, url => {
+    document.getElementById('editor-content').focus();
+    document.execCommand('insertImage', false, url);
+  });
+  input.value = '';
+};
+
+// EDITOR FORMAT
+window.fmt = function(cmd) { document.getElementById('editor-content').focus(); document.execCommand(cmd, false, null); };
+window.insertHeading = function(level) {
+  document.getElementById('editor-content').focus();
+  document.execCommand('formatBlock', false, `h${level}`);
+};
+
+// SETTINGS
+const DEFAULTS = {
+  hero:{eyebrow:'자연을 담은 공간 — Since 2009',thin:'땅과 하늘 사이,',title:'살아있는\n정원을\n짓습니다',sub:'금석 조경은 자연의 숨결을 담아 사람과 환경이 하나 되는 공간을 설계합니다.'},
+  about:{eyebrow:'금석조경 소개',title:'자연과 사람이\n공존하는 공간',body:'금석 조경은 2009년 창업 이래 자연의 아름다움을 도시 속으로 가져오는 일을 해왔습니다.',stat1n:'500+',stat1l:'완료 프로젝트',stat2n:'15년',stat2l:'전문 경력',stat3n:'98%',stat3l:'고객 만족도'},
+  services:[
+    {icon:'🌱',name:'정원 설계 & 시공',desc:'고객의 취향과 공간 특성에 맞는 맞춤형 정원을 설계하고 시공합니다.'},
+    {icon:'🏡',name:'주거 조경',desc:'주택 및 아파트 단지 외부 공간을 사계절 아름답게 꾸며드립니다.'},
+    {icon:'🏢',name:'상업 & 공공 조경',desc:'기업 사옥, 쇼핑몰, 공원 등 대규모 프로젝트를 전문적으로 진행합니다.'},
+    {icon:'🪨',name:'조경 구조물',desc:'석축, 데크, 퍼걸러, 연못 등 다양한 조경 구조물을 설계 및 시공합니다.'},
+    {icon:'💧',name:'수경 시설 조성',desc:'폭포, 연못, 분수로 시각적·청각적 편안함을 동시에 드립니다.'},
+    {icon:'✂️',name:'유지 관리',desc:'완공 후에도 아름다움이 지속되도록 정기적인 관리 서비스를 제공합니다.'},
+  ],
+  philosophy:{title:'자연은\n설계되지 않는다',quote:'"가장 좋은 정원은\n정원처럼 보이지 않는 정원"',body:'금석 조경은 인공적인 아름다움이 아닌, 자연이 스스로 빛나도록 도와주는 조경을 지향합니다.',val1:'자연과의 조화를 최우선으로',val2:'지속 가능한 소재와 공법 사용',val3:'사계절 살아있는 공간 구성',val4:'고객과의 깊은 소통과 신뢰'},
+  contact:{email:'',phone:'',address:'',hours:'평일 09:00 – 18:00',mailto:''}
+};
+
+async function loadSettingsFromFirebase() {
+  try {
+    const { collection, getDocs } = window._fsLib;
+    const snap = await getDocs(collection(db, 'settings'));
+    let saved = {};
+    snap.docs.forEach(d => { saved[d.id] = d.data(); });
+    const d = deepMerge(JSON.parse(JSON.stringify(DEFAULTS)), saved);
+    applySettingsToForm(d);
+  } catch(e) {
+    applySettingsToForm(DEFAULTS);
+  }
+}
+
+window.loadSettings = loadSettingsFromFirebase;
+
+function applySettingsToForm(d) {
+  const sv = (id, val) => { const el = document.getElementById(id); if(el && val !== undefined) el.value = val; };
+  sv('s-hero-eyebrow', d.hero?.eyebrow); sv('s-hero-thin', d.hero?.thin);
+  sv('s-hero-title', d.hero?.title); sv('s-hero-sub', d.hero?.sub);
+  sv('s-about-eyebrow', d.about?.eyebrow); sv('s-about-title', d.about?.title);
+  sv('s-about-body', d.about?.body);
+  sv('s-stat1-n', d.about?.stat1n); sv('s-stat1-l', d.about?.stat1l);
+  sv('s-stat2-n', d.about?.stat2n); sv('s-stat2-l', d.about?.stat2l);
+  sv('s-stat3-n', d.about?.stat3n); sv('s-stat3-l', d.about?.stat3l);
+  renderSvcEditor(d.services || DEFAULTS.services);
+  sv('s-philo-title', d.philosophy?.title); sv('s-philo-quote', d.philosophy?.quote);
+  sv('s-philo-body', d.philosophy?.body);
+  sv('s-val1', d.philosophy?.val1); sv('s-val2', d.philosophy?.val2);
+  sv('s-val3', d.philosophy?.val3); sv('s-val4', d.philosophy?.val4);
+  sv('s-email', d.contact?.email); sv('s-phone', d.contact?.phone);
+  sv('s-address', d.contact?.address); sv('s-hours', d.contact?.hours);
+  sv('s-mailto', d.contact?.mailto);
+}
+
+function renderSvcEditor(svcs) {
+  const icons = ['🌱','🏡','🏢','🪨','💧','✂️','🌳','🌿','🏗️','💡','🌸','🍃'];
+  document.getElementById('svc-editor-list').innerHTML = svcs.map((s,i) => `
+    <div class="svc-editor-item">
+      <div class="svc-editor-item-head">
+        <span class="svc-editor-num">0${i+1}</span>
+        <select id="s-svc${i}-icon">${icons.map(ic=>`<option value="${ic}"${ic===s.icon?' selected':''}>${ic}</option>`).join('')}</select>
+      </div>
+      <div class="svc-editor-fields">
+        <div><label class="form-label">서비스명</label><input class="form-input" id="s-svc${i}-name" value="${s.name||''}"/></div>
+        <div><label class="form-label">설명</label><input class="form-input" id="s-svc${i}-desc" value="${s.desc||''}"/></div>
+      </div>
+    </div>`).join('');
+}
+
+window.saveSettings = async function() {
+  const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const services = Array.from({length:6}, (_,i) => ({
+    icon: document.getElementById(`s-svc${i}-icon`)?.value || '',
+    name: document.getElementById(`s-svc${i}-name`)?.value || '',
+    desc: document.getElementById(`s-svc${i}-desc`)?.value || '',
+  }));
+  const data = {
+    hero: {eyebrow:v('s-hero-eyebrow'),thin:v('s-hero-thin'),title:v('s-hero-title'),sub:v('s-hero-sub')},
+    about: {eyebrow:v('s-about-eyebrow'),title:v('s-about-title'),body:v('s-about-body'),stat1n:v('s-stat1-n'),stat1l:v('s-stat1-l'),stat2n:v('s-stat2-n'),stat2l:v('s-stat2-l'),stat3n:v('s-stat3-n'),stat3l:v('s-stat3-l')},
+    philosophy: {title:v('s-philo-title'),quote:v('s-philo-quote'),body:v('s-philo-body'),val1:v('s-val1'),val2:v('s-val2'),val3:v('s-val3'),val4:v('s-val4')},
+    contact: {email:v('s-email'),phone:v('s-phone'),address:v('s-address'),hours:v('s-hours'),mailto:v('s-mailto')},
+    services: {items: services},
+  };
+  try {
+    const { setDoc, doc } = window._fsLib;
+    for (const [key, val] of Object.entries(data)) {
+      await setDoc(doc(db, 'settings', key), val, { merge: true });
+    }
+    showToast('저장 완료! 메인 사이트에 반영되었습니다 🌿');
+    document.getElementById('save-hint').textContent = '마지막 저장: ' + new Date().toLocaleTimeString('ko-KR');
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, true);
+  }
+};
+
+// FAVICON
+window.previewFavicon = function(url) {
+  const preview = document.getElementById('favicon-preview');
+  if (!preview) return;
+  if (url) {
+    preview.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:contain;border-radius:6px"/>`;
+  } else {
+    preview.innerHTML = '🌿';
+  }
+};
+
+window.handleFaviconFile = async function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  showToast('파비콘 업로드 중...');
+  try {
+    const { ref, uploadBytes, getDownloadURL } = window._fsLib;
+    const storageRef = ref(storage, `favicon/${Date.now()}_${file.name}`);
+    const snap = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(snap.ref);
+    document.getElementById('s-favicon-url').value = url;
+    previewFavicon(url);
+    showToast('업로드 완료! 저장 버튼을 눌러주세요.');
+  } catch(e) {
+    showToast('업로드 실패: ' + e.message, true);
+  }
+  input.value = '';
+};
+
+window.saveFavicon = async function() {
+  const url = document.getElementById('s-favicon-url').value.trim();
+  if (!url) { showToast('파비콘 이미지를 먼저 업로드하거나 URL을 입력해주세요.', true); return; }
+  try {
+    const { setDoc, doc } = window._fsLib;
+    await setDoc(doc(db, 'settings', 'favicon'), { url }, { merge: true });
+    showToast('파비콘이 저장되었습니다! 🌿');
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, true);
+  }
+};
+
+async function loadFaviconSetting() {
+  try {
+    const { doc, getDoc } = window._fsLib;
+    const snap = await getDoc(doc(db, 'settings', 'favicon'));
+    if (snap.exists() && snap.data().url) {
+      const url = snap.data().url;
+      document.getElementById('s-favicon-url').value = url;
+      previewFavicon(url);
+    }
+  } catch(e) {}
+}
+
+// UTILS
+function deepMerge(target, source) {
+  const out = Object.assign({}, target);
+  for (const k in source) {
+    if (source[k] && typeof source[k] === 'object' && !Array.isArray(source[k])) {
+      out[k] = deepMerge(target[k] || {}, source[k]);
+    } else { out[k] = source[k]; }
+  }
+  return out;
+}
+
+window.showToast = function(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+};
+
+// PAGE NAV
+window.showPage = function(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = { portfolio:'포트폴리오 관리', editor:'프로젝트 편집', settings:'텍스트 & 정보 수정' };
+  if (titles[name]) document.getElementById('topbar-title').textContent = titles[name];
+};
+
+window.showStab = function(name, el) {
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('stab-' + name).classList.add('active');
+};
+
+// NAV IDs
+document.getElementById('nav-port') || document.querySelectorAll('.sb-item')[0]?.setAttribute('id','nav-port');
+
+// INIT
+let _initialized = false;
+async function init() {
+  if (_initialized) return;
+  _initialized = true;
+  await loadProjects();
+  await loadSettingsFromFirebase();
+  await loadFaviconSetting();
+}
+
+</script>
+</body>
+</html>
